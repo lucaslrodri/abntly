@@ -80,6 +80,7 @@ ordem. A CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) roda 
 | `sh scripts/readme.sh` | o exemplo básico e a imagem dele nos dois READMEs |
 | `sh scripts/thumbnail.sh` | `thumbnail.png`, a capa do modelo |
 | `sh scripts/examples.sh` | as imagens de referência dos exemplos completos e do modelo |
+| `sh scripts/package.sh` | os arquivos publicados no Typst Universe, em `dist/preview/abntly/<versão>/` |
 
 Os PDFs dos manuais, as imagens dos seus exemplos, as imagens dos READMEs e a `thumbnail.png` são commitados. Depois
 de mudar o pacote, rode `sh scripts/manual.sh` e `sh scripts/readme.sh`: o `check.sh` falha quando um deles fica
@@ -93,4 +94,25 @@ versão no `typst.toml`:
 1. troque a versão nas importações (`@preview/abntly:<versão>`) do modelo, dos exemplos, do manual e dos READMEs, e
    nos links dos READMEs;
 2. rode `sh scripts/link.sh`, `sh scripts/manual.sh`, `sh scripts/readme.sh` e `sh scripts/thumbnail.sh`;
-3. depois do commit, crie e envie a tag `v<versão>`: é ela que faz os links e as imagens dos READMEs funcionarem.
+3. faça o commit e crie e envie a tag: `git tag v<versão> && git push origin main v<versão>`. A tag faz os links e
+   as imagens dos READMEs funcionarem e dispara o [`release.yml`](.github/workflows/release.yml), que roda os
+   testes, monta o pacote com `scripts/package.sh` (ele recusa uma tag diferente da versão), cria um trabalho do
+   pacote montado e o compila, roda o verificador do typst/packages, publica a GitHub Release (zip e manuais) e
+   envia o branch `abntly-<versão>` ao fork do typst/packages;
+4. abra o pull request `abntly:<versão>` em typst/packages pelo link do resumo do workflow, com o checklist do
+   modelo preenchido. Depois da integração, a versão aparece no [Typst Universe](https://typst.app/universe/) em
+   minutos. Versões publicadas são imutáveis: uma correção é uma versão nova.
+
+## Publicação
+
+O `release.yml` chega ao typst/packages por um fork e um token, configurados uma vez:
+
+1. um fork de [typst/packages](https://github.com/typst/packages). Se o fork não se chamar `<dono>/packages`, defina
+   a variável de repositório `REGISTRY_FORK` (Settings > Secrets and variables > Actions > Variables) como `dono/nome`;
+2. um token pessoal *fine-grained* restrito ao fork, com **Contents: read and write**, salvo como o segredo de
+   repositório `REGISTRY_TOKEN`. Se o push for recusado por falta do escopo `workflow`, sincronize a `main` do fork
+   com o typst/packages: o branch nasce da `main` atual deles, que pode trazer workflows que o fork ainda não tem.
+
+Para ensaiar o workflow nesta máquina, com o Docker aberto: `act push -W .github/workflows/release.yml -e
+.github/act/release.json`. Os passos externos (verificador, release, push) são pulados; `sh scripts/package.sh` dá os
+mesmos arquivos em `dist/`.

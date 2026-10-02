@@ -26,3 +26,6 @@ tinymist.lock
 
 # README: temporary folder of scripts/readme.sh
 /docs/readme/.tmp/
+
+# Package assembled by scripts/package.sh for Typst Universe
+/dist/
