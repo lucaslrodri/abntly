@@ -1,0 +1,28 @@
+# General
+.idea
+desktop.ini
+.DS_Store
+tinymist-lsp.log
+tinymist.lock
+
+# VS Code
+.vscode/
+
+# Fonts downloaded by scripts/fonts.sh
+/fonts
+
+# Tytanic also writes a .gitignore inside every tests/**/out and tests/**/diff
+/tests/**/out/
+/tests/**/diff/
+
+# The reference pictures of the cases of Tytanic that are whole works (the two full examples and the template): they
+# are rendered here by scripts/examples.sh, and left out of the repository for their weight (103 pages, 4 MB);
+# without them the three cases only compile
+/tests/examples/*/ref/
+/tests/template/ref/
+
+# Manual: temporary folder of scripts/manual.sh
+/docs/manual/examples/.out.tmp/
+
+# README: temporary folder of scripts/readme.sh
+/docs/readme/.tmp/

@@ -1,0 +1,61 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    # Tytanic bundles its own compiler: 0.4.x is Typst 0.15.x, the version the reference pictures were rendered with.
+    name: Tytanic 0.4.1 (Typst 0.15), the READMEs and the manual
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache fonts
+        uses: actions/cache@v6
+        with:
+          path: fonts
+          key: newcomputermodern-1
+
+      # The suite needs the sans, the mono and the cut 08 of New Computer Modern, which Typst does not bundle. No
+      # system fonts: only fonts/ and the ones embedded in Typst, so the result does not depend on the runner image.
+      - name: Download fonts
+        run: sh scripts/fonts.sh --no-install
+
+      # The template and the examples import `@preview/abntly:<version>`: point it to this checkout.
+      - name: Link the package
+        run: sh scripts/link.sh
+
+      - name: Setup Tytanic
+        uses: typst-community/setup-tytanic@v1
+        with:
+          tytanic-version: 0.4.1
+
+      # scripts/readme.sh and scripts/manual.sh compile with the `typst` command.
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v5
+        with:
+          typst-version: 0.15.1
+
+      # The visual cases against their reference pictures and the unit tests; then the READMEs against the minimal
+      # example, and the pictures and the PDFs of the manual against its sources.
+      - name: Run the checks
+        run: sh scripts/check.sh
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: tytanic-results
+          path: |
+            tests/**/diff/*.png
+            tests/**/out/*.png
+            tests/**/ref/*.png
+          retention-days: 5
