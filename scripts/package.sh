@@ -3,14 +3,15 @@
 # dist/), the layout of `packages/` in https://github.com/typst/packages, so <target> also works as a package path:
 # `typst init --package-path dist @preview/abntly:<version> work`.
 #
-# Only the list below is published. The rest of the repository (tests, manuals, examples, scripts, CI) stays out of
-# typst/packages, as its guidelines ask (docs/tips.md, "What to commit? What to exclude?"): the READMEs reach the
-# manuals, the examples and their pictures by their GitHub URL, at the tag of the version. fonts/ (downloaded by
-# scripts/fonts.sh) and .gitignore are not copied either.
+# Only the list below is published. The rest of the repository (tests, manuals, examples, scripts, CI, the English
+# README) stays out of typst/packages, as its guidelines ask (docs/tips.md, "What to commit? What to exclude?"):
+# the README reaches the manuals, the examples and their PDFs, the template, the licence and the English README by
+# their GitHub URL, at the tag of the version. fonts/ (downloaded by scripts/fonts.sh) and .gitignore are not copied
+# either.
 set -eu
 cd "$(dirname "$0")/.."
 
-files="typst.toml LICENSE README.md README.en.md thumbnail.png src template"
+files="typst.toml LICENSE README.md thumbnail.png src template"
 
 name=$(sed -n 's/^name *= *"\(.*\)"/\1/p' typst.toml | head -n 1)
 version=$(sed -n 's/^version *= *"\(.*\)"/\1/p' typst.toml | head -n 1)
@@ -48,11 +49,18 @@ if [ -n "$stale" ]; then
   fail "the references above do not point to version $version"
 fi
 
-# The READMEs reach the manuals, the examples and their pictures in the repository, at the tag of this version
-# (scripts/readme.sh writes the pictures). The badges read typst.toml of main through an encoded URL: not matched here.
+# The READMEs reach what is in the repository (the manuals, the examples and their PDFs, the template, the licence,
+# the README in the other language, the pictures) by its GitHub URL at the tag of this version: README.md is shown
+# on Typst Universe without the repository around it, and README.en.md is read on GitHub at any ref. Only anchors
+# (`#...`) may be relative. The badges read typst.toml of main through an encoded URL: not matched here.
 repository=$(sed -n 's/^repository *= *"https:\/\/github\.com\/\(.*\)"/\1/p' typst.toml | head -n 1)
-for readme in README.md README.en.md; do
-  stale=$(grep -noE "(github\.com/$repository/(blob|raw|tree)|raw\.githubusercontent\.com/$repository)/[^/]+/" "$out/$readme" \
+for readme in "$out/README.md" README.en.md; do
+  relative=$(grep -noE '(\]\(|href=")[^)" ]+' "$readme" | grep -vE '^[0-9]+:(\]\(|href=")(https?://|#)' || true)
+  if [ -n "$relative" ]; then
+    echo "$readme: $relative" >&2
+    fail "the links above are relative; use the GitHub URL at the tag v$version"
+  fi
+  stale=$(grep -noE "(github\.com/$repository/(blob|raw|tree)|raw\.githubusercontent\.com/$repository)/[^/]+/" "$readme" \
     | grep -v "/v$version/\$" || true)
   if [ -n "$stale" ]; then
     echo "$readme: $stale" >&2

@@ -43,8 +43,9 @@ working copy in `typst compile`, in `tt` and in the editor. The other tests impo
 | [`scripts/`](scripts/) | the scripts for installing, building and checking |
 
 The code, its comments and the scripts are written in English. The manuals, the READMEs and this file have a version
-in Portuguese and one in English. Only `src/`, `template/`, `typst.toml`, `LICENSE`, the READMEs and `thumbnail.png`
-go to Typst Universe (the `exclude` of `typst.toml` lists the rest).
+in Portuguese and one in English. Only `src/`, `template/`, `typst.toml`, `LICENSE`, `README.md` and `thumbnail.png`
+go to Typst Universe (the `exclude` of `typst.toml` and `scripts/package.sh` list the rest); `README.en.md` stays in
+the repository, and `README.md` reaches it by the address of the tag.
 
 ## Tests
 
@@ -68,28 +69,30 @@ The reference pictures of the full examples and of the template (103 pages, 4 MB
 Without them, those three cases only compile. `sh scripts/examples.sh` renders the pictures, and from then on each
 page is compared; run it again when a change of the pages is intended (`--remove` deletes the pictures).
 
-`scripts/check.sh` runs the suite and also checks that the READMEs show the basic example as it is, that the pictures
-and the PDFs of the manual are what the sources give today, and that the two manuals hold the same things in the
-same order. The CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) runs the same script on every push.
+`scripts/check.sh` runs the suite and also checks that the READMEs show the basic example as it is, that the PDFs of
+the full examples and the pictures and the PDFs of the manual are what the sources give today, and that the two
+manuals hold the same things in the same order. The CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) runs the same script on every push.
 
 ## Building
 
 | Script | What it builds |
 | ------ | -------------- |
 | `sh scripts/manual.sh` | the pictures of the examples of the manual and the two PDFs, `docs/manual-pt.pdf` and `docs/manual-en.pdf` |
-| `sh scripts/readme.sh` | the basic example and its picture in the two READMEs |
+| `sh scripts/readme.sh` | the basic example and its picture in the two READMEs, and the PDFs of the full examples, `docs/example-pt.pdf` and `docs/example-en.pdf` |
 | `sh scripts/thumbnail.sh` | `thumbnail.png`, the cover of the template |
 | `sh scripts/examples.sh` | the reference pictures of the full examples and of the template |
 | `sh scripts/package.sh` | the files published on Typst Universe, in `dist/preview/abntly/<version>/` |
 
-The PDFs of the manuals, the pictures of their examples, the pictures of the READMEs and `thumbnail.png` are
-committed. After changing the package, run `sh scripts/manual.sh` and `sh scripts/readme.sh`: `check.sh` fails when
-one of them is out of date.
+The PDFs of the manuals and of the full examples, the pictures of the examples of the manual, the pictures of the
+READMEs and `thumbnail.png` are committed. After changing the package, run `sh scripts/manual.sh` and
+`sh scripts/readme.sh`: `check.sh` fails when one of them is out of date.
 
 ## New version
 
-The READMEs reach the manual, the examples and the pictures by the address of the tag of the version (`v0.1.0`).
-When the version changes in `typst.toml`:
+The READMEs reach what is in the repository (the manuals, the examples and their PDFs, the template, the licence, the
+README in the other language, the pictures) by the address of the tag of the version (`v0.1.0`); only the anchors
+are relative, because `README.md` is shown on Typst Universe without the repository around it. When the version
+changes in `typst.toml`:
 
 1. change the version in the imports (`@preview/abntly:<version>`) of the template, the examples, the manual and
    the READMEs, and in the links of the READMEs;
@@ -103,6 +106,10 @@ When the version changes in `typst.toml`:
    the checklist of its template filled in. After the merge, the version is on
    [Typst Universe](https://typst.app/universe/) within minutes. Published versions are immutable: a fix is a new
    version.
+
+While the pull request is not merged, the version can be redone: delete the release and the tag
+(`gh release delete v<version> --cleanup-tag` and `git tag -d v<version>`), fix, commit and create the tag again. The
+workflow force-pushes the branch and the pull request updates by itself.
 
 ## Publishing
 

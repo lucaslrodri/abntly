@@ -43,8 +43,9 @@ trabalho no `typst compile`, no `tt` e no editor. Os demais testes importam `src
 | [`scripts/`](scripts/) | os scripts de instalação, de geração e de verificação |
 
 O código, os comentários e os scripts são escritos em inglês. Os manuais, os READMEs e este arquivo têm uma versão em
-português e uma em inglês. No Typst Universe entram só `src/`, `template/`, o `typst.toml`, o `LICENSE`, os READMEs e
-a `thumbnail.png` (o `exclude` do `typst.toml` lista o resto).
+português e uma em inglês. No Typst Universe entram só `src/`, `template/`, o `typst.toml`, o `LICENSE`, o `README.md`
+e a `thumbnail.png` (o `exclude` do `typst.toml` e o `scripts/package.sh` listam o resto); o `README.en.md` fica no
+repositório, e o `README.md` chega a ele pelo endereço da tag.
 
 ## Testes
 
@@ -68,28 +69,29 @@ As imagens de referência dos exemplos completos e do modelo (103 páginas, 4 MB
 elas, esses três casos só compilam. O `sh scripts/examples.sh` gera as imagens, e a partir daí cada página é
 comparada; rode-o de novo quando uma mudança nas páginas for intencional (`--remove` apaga as imagens).
 
-O `scripts/check.sh` roda a suíte e confere também que os READMEs mostram o exemplo básico como ele é, que as
-imagens e os PDFs do manual são os que as fontes dão hoje, e que os dois manuais têm as mesmas coisas na mesma
-ordem. A CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) roda o mesmo script a cada push.
+O `scripts/check.sh` roda a suíte e confere também que os READMEs mostram o exemplo básico como ele é, que os PDFs
+dos exemplos completos e as imagens e os PDFs do manual são os que as fontes dão hoje, e que os dois manuais têm as
+mesmas coisas na mesma ordem. A CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) roda o mesmo script a cada push.
 
 ## Geração
 
 | Script | O que gera |
 | ------ | ---------- |
 | `sh scripts/manual.sh` | as imagens dos exemplos do manual e os dois PDFs, `docs/manual-pt.pdf` e `docs/manual-en.pdf` |
-| `sh scripts/readme.sh` | o exemplo básico e a imagem dele nos dois READMEs |
+| `sh scripts/readme.sh` | o exemplo básico e a imagem dele nos dois READMEs, e os PDFs dos exemplos completos, `docs/example-pt.pdf` e `docs/example-en.pdf` |
 | `sh scripts/thumbnail.sh` | `thumbnail.png`, a capa do modelo |
 | `sh scripts/examples.sh` | as imagens de referência dos exemplos completos e do modelo |
 | `sh scripts/package.sh` | os arquivos publicados no Typst Universe, em `dist/preview/abntly/<versão>/` |
 
-Os PDFs dos manuais, as imagens dos seus exemplos, as imagens dos READMEs e a `thumbnail.png` são commitados. Depois
-de mudar o pacote, rode `sh scripts/manual.sh` e `sh scripts/readme.sh`: o `check.sh` falha quando um deles fica
-desatualizado.
+Os PDFs dos manuais e dos exemplos completos, as imagens dos exemplos do manual, as imagens dos READMEs e a
+`thumbnail.png` são commitados. Depois de mudar o pacote, rode `sh scripts/manual.sh` e `sh scripts/readme.sh`: o
+`check.sh` falha quando um deles fica desatualizado.
 
 ## Nova versão
 
-Os READMEs apontam para o manual, os exemplos e as imagens pelo endereço da tag da versão (`v0.1.0`). Ao mudar a
-versão no `typst.toml`:
+Os READMEs apontam para o que está no repositório (manuais, exemplos e seus PDFs, modelo, licença, o README no outro
+idioma, imagens) pelo endereço da tag da versão (`v0.1.0`); só as âncoras são relativas, porque o `README.md` é
+mostrado no Typst Universe sem o repositório em volta. Ao mudar a versão no `typst.toml`:
 
 1. troque a versão nas importações (`@preview/abntly:<versão>`) do modelo, dos exemplos, do manual e dos READMEs, e
    nos links dos READMEs;
@@ -102,6 +104,10 @@ versão no `typst.toml`:
 4. abra o pull request `abntly:<versão>` em typst/packages pelo link do resumo do workflow, com o checklist do
    modelo preenchido. Depois da integração, a versão aparece no [Typst Universe](https://typst.app/universe/) em
    minutos. Versões publicadas são imutáveis: uma correção é uma versão nova.
+
+Enquanto o pull request não é integrado, a versão pode ser refeita: apague a release e a tag
+(`gh release delete v<versão> --cleanup-tag` e `git tag -d v<versão>`), corrija, faça o commit e crie a tag de novo. O
+workflow força o push do branch e o pull request se atualiza sozinho.
 
 ## Publicação
 

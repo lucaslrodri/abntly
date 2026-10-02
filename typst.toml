@@ -9,9 +9,10 @@ repository = "https://github.com/lucaslrodri/abntly"
 keywords = ["abnt", "thesis", "dissertation", "tcc", "brazil", "academic"]
 categories = ["thesis"]
 compiler = "0.15.0"
-# Not part of the package on Typst Universe: the test suite, the docs (the manual, which the README reaches by its
-# address in the repository), the examples, the scripts, the notes on the development and the CI.
-exclude = ["tests", "docs", "examples", "scripts", "CONTRIBUTING.md", "CONTRIBUTING.en.md", ".github"]
+# Not part of the package on Typst Universe: the test suite, the docs (the manuals and the PDFs of the examples, which
+# the README reaches by their address in the repository), the examples, the scripts, the English README (reached the
+# same way), the notes on the development and the CI.
+exclude = ["tests", "docs", "examples", "scripts", "README.en.md", "CONTRIBUTING.md", "CONTRIBUTING.en.md", ".github"]
 
 [template]
 path = "template"

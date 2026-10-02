@@ -1,7 +1,7 @@
 # abntly
 
 <p align="center">
-  <strong>Português</strong> · <a href="README.en.md">English</a>
+  <strong>Português</strong> · <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/README.en.md">English</a>
 </p>
 
 <p align="center">
@@ -9,7 +9,7 @@
   <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-pt.pdf"><img src="https://img.shields.io/badge/manual-portugu%C3%AAs-orange" alt="Manual em português (PDF)"></a>
   <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-en.pdf"><img src="https://img.shields.io/badge/manual-English-orange" alt="Manual em inglês (PDF)"></a>
   <a href="https://typst.app/"><img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Flucaslrodri%2Fabntly%2Fmain%2Ftypst.toml&amp;query=%24.package.compiler&amp;prefix=%E2%89%A5%20&amp;label=Typst&amp;logo=typst&amp;color=239dad" alt="Versão mínima do Typst"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-green" alt="Licença: MIT"></a>
+  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-green" alt="Licença: MIT"></a>
 </p>
 
 <p align="center">
@@ -46,7 +46,7 @@ escopo (veja [ABNTyp](#veja-também)).
 
 ## Uso
 
-Para criar um trabalho novo a partir do [modelo](template/main.typ), em que cada elemento está comentado como
+Para criar um trabalho novo a partir do [modelo](https://github.com/lucaslrodri/abntly/blob/v0.1.0/template/main.typ), em que cada elemento está comentado como
 obrigatório ou opcional:
 
 ```sh
@@ -126,10 +126,10 @@ Texto da conclusão.
 
 ## Exemplo completo
 
-- [`examples/pt/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/pt/main.typ): um trabalho com todos os elementos da estrutura e os
-  capítulos em arquivos separados, escrito com os nomes em português.
-- [`examples/en/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/en/main.typ): o mesmo trabalho em inglês, com os nomes em inglês.
-- [`template/main.typ`](template/main.typ): o modelo comentado, ponto de partida de um trabalho novo.
+- [`examples/pt/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/pt/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/example-pt.pdf)): um trabalho com
+  todos os elementos da estrutura e os capítulos em arquivos separados, escrito com os nomes em português.
+- [`examples/en/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/en/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/example-en.pdf)): o mesmo trabalho
+  em inglês, com os nomes em inglês.
 
 ## Documentação
 
@@ -173,12 +173,17 @@ para o projeto.
 
 ## Veja também
 
+O abntly se inspirou nestes projetos:
+
 - [ABNTyp](https://typst.app/universe/package/abntyp): pacote do Typst para documentos nas normas da ABNT. Além de
   trabalhos acadêmicos, tem modelos para artigos, relatórios técnicos, projetos de pesquisa, livros, pôsteres e
   slides.
 - [abnTeX2](https://www.abntex.net.br/): classes e pacotes do LaTeX para documentos nas normas da ABNT. O abntly
   segue o modelo de trabalho acadêmico do abnTeX2 nos pontos que as normas deixam em aberto.
+- [csl-abnt](https://github.com/virgilinojuca/csl-abnt): estilo CSL nas normas ABNT NBR 6023 e NBR 10520 para o
+  Zotero, de [@virgilinojuca](https://github.com/virgilinojuca) e [@AAguiarCAM](https://github.com/AAguiarCAM), em
+  domínio público (CC0). O `src/csl/abnt-6023.csl` do abntly foi adaptado dele.
 
 ## Licença
 
-O pacote é distribuído sob a [licença MIT](LICENSE).
+O pacote é distribuído sob a [licença MIT](https://github.com/lucaslrodri/abntly/blob/v0.1.0/LICENSE).

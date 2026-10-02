@@ -10,9 +10,13 @@
 # `version` of typst.toml), as typst/packages recommends, so the README of a version keeps the pictures of that
 # version: on GitHub they show once the tag is pushed.
 #
-# `sh scripts/readme.sh --check` writes nothing and fails when a README or a picture is out of date
-# (scripts/check.sh runs it); on the CI (`CI` set) a picture that differs only warns, since its bytes may depend on
-# the system. The examples import the package by its name: `sh scripts/link.sh` first. Only the fonts
+# It also builds the PDFs of the two full examples that the READMEs link by the same kind of URL:
+# docs/example-pt.pdf (examples/pt/main.typ) and docs/example-en.pdf (examples/en/main.typ), committed like the
+# manuals.
+#
+# `sh scripts/readme.sh --check` writes nothing and fails when a README, a picture or a PDF is out of date
+# (scripts/check.sh runs it); on the CI (`CI` set) a picture or a PDF that differs only warns, since its bytes may
+# depend on the system. The examples import the package by its name: `sh scripts/link.sh` first. Only the fonts
 # of fonts/ (`sh scripts/fonts.sh`) are used; any warning fails the run.
 set -eu
 cd "$(dirname "$0")/.."
@@ -98,8 +102,32 @@ sync() {
   cmp -s "$tmp/$name.readme" "$readme" || { cp "$tmp/$name.readme" "$readme" && echo "$readme"; }
 }
 
+# the PDF of a full example, as the READMEs link it: the source, the committed PDF
+pdf() {
+  source=$1
+  target=$2
+  name=$(basename "$target")
+
+  compile --creation-timestamp 0 "$source" "$tmp/$name"
+
+  if $check; then
+    if ! cmp -s "$tmp/$name" "$target"; then
+      if [ -n "${CI:-}" ]; then
+        echo "warning: $target differs from what the example gives here" >&2
+      else
+        echo "error: $target is out of date" >&2
+        stale=true
+      fi
+    fi
+    return 0
+  fi
+  cmp -s "$tmp/$name" "$target" || { mv -f "$tmp/$name" "$target" && echo "$target"; }
+}
+
 sync README.md examples/pt/basico.typ '![As %s páginas de %s](%s)'
 sync README.en.md examples/en/basic.typ '![The %s pages of %s](%s)'
+pdf examples/pt/main.typ docs/example-pt.pdf
+pdf examples/en/main.typ docs/example-en.pdf
 
 if $stale; then
   fail "run \`sh scripts/readme.sh\`"

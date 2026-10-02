@@ -61,6 +61,8 @@ jobs:
           (cd "$dir" && zip -qr "$GITHUB_WORKSPACE/dist/$name-$version.zip" .)
           cp docs/manual-pt.pdf "dist/$name-$version-manual-pt.pdf"
           cp docs/manual-en.pdf "dist/$name-$version-manual-en.pdf"
+          cp docs/example-pt.pdf "dist/$name-$version-example-pt.pdf"
+          cp docs/example-en.pdf "dist/$name-$version-example-en.pdf"
           {
             echo "dir=$dir"
             echo "name=$name"
