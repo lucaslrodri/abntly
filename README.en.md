@@ -1,15 +1,15 @@
 # abntly
 
 <p align="center">
-  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.1/README.md">Português</a> · <strong>English</strong>
+  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/README.md">Português</a> · <strong>English</strong>
 </p>
 
 <p align="center">
   <a href="https://typst.app/universe/package/abntly"><img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Flucaslrodri%2Fabntly%2Fmain%2Ftypst.toml&amp;query=%24.package.version&amp;label=Typst%20Universe&amp;logo=typst&amp;color=239dad" alt="Version on Typst Universe"></a>
-  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/manual-en.pdf"><img src="https://img.shields.io/badge/manual-English-orange" alt="Manual in English (PDF)"></a>
-  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/manual-pt.pdf"><img src="https://img.shields.io/badge/manual-portugu%C3%AAs-orange" alt="Manual in Portuguese (PDF)"></a>
+  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-en.pdf"><img src="https://img.shields.io/badge/manual-English-orange" alt="Manual in English (PDF)"></a>
+  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-pt.pdf"><img src="https://img.shields.io/badge/manual-portugu%C3%AAs-orange" alt="Manual in Portuguese (PDF)"></a>
   <a href="https://typst.app/"><img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Flucaslrodri%2Fabntly%2Fmain%2Ftypst.toml&amp;query=%24.package.compiler&amp;prefix=%E2%89%A5%20&amp;label=Typst&amp;logo=typst&amp;color=239dad" alt="Minimum Typst version"></a>
-  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.1/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a>
+  <a href="https://github.com/lucaslrodri/abntly/blob/v0.1.0/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a>
 </p>
 
 <p align="center">
@@ -40,17 +40,17 @@ The package covers academic works only. Articles, technical reports and research
 
 ## Usage
 
-To create a new work from the [template](https://github.com/lucaslrodri/abntly/blob/v0.1.1/template/main.typ), in which each element is commented as required or
+To create a new work from the [template](https://github.com/lucaslrodri/abntly/blob/v0.1.0/template/main.typ), in which each element is commented as required or
 optional (the comments are in Portuguese):
 
 ```sh
-typst init @preview/abntly:0.1.1 my-work
+typst init @preview/abntly:0.1.0 my-work
 ```
 
 To use the package in a file that already exists, import it at the top:
 
 ```typst
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 ```
 
 The fonts *New Computer Modern Sans*, *Mono* and *08* must be installed (see [Dependencies](#dependencies)).
@@ -59,12 +59,12 @@ The fonts *New Computer Modern Sans*, *Mono* and *08* must be installed (see [De
 
 The example below has only the required elements of NBR 14724:2024, in the order of the standard. The default
 language of a work is Portuguese, so the example passes `lang: "en"`. The file
-[`refs.bib`](https://github.com/lucaslrodri/abntly/blob/v0.1.1/examples/en/refs.bib) holds the works cited in the text.
+[`refs.bib`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/en/refs.bib) holds the works cited in the text.
 
 <!-- basic:begin (generated from examples/en/basic.typ by scripts/readme.sh: do not edit by hand) -->
 ```typst
 // Minimal academic work: only the required elements of ABNT NBR 14724:2024, in the order of the standard.
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 #show: abntly.with(
   lang: "en",
@@ -118,14 +118,14 @@ Text of the conclusion.
 #bibliography("refs.bib")
 ```
 
-![The 11 pages of examples/en/basic.typ](https://raw.githubusercontent.com/lucaslrodri/abntly/v0.1.1/docs/readme/basic.png)
+![The 11 pages of examples/en/basic.typ](https://raw.githubusercontent.com/lucaslrodri/abntly/v0.1.0/docs/readme/basic.png)
 <!-- basic:end -->
 
 ## Full example
 
-- [`examples/en/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.1/examples/en/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/example-en.pdf)): a work in English
+- [`examples/en/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/en/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/example-en.pdf)): a work in English
   with every element of the structure and its chapters in separate files, written with the English names.
-- [`examples/pt/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.1/examples/pt/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/example-pt.pdf)): the same work in
+- [`examples/pt/main.typ`](https://github.com/lucaslrodri/abntly/blob/v0.1.0/examples/pt/main.typ) ([PDF](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/example-pt.pdf)): the same work in
   Portuguese, with the Portuguese names.
 
 ## Documentation
@@ -133,8 +133,8 @@ Text of the conclusion.
 The manual describes each function together with what the standard asks of each element, with the code and its
 result. It works as a guide to the package and as a quick reference of the standards.
 
-- [Manual in English](https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/manual-en.pdf) (PDF), with the English names.
-- [Manual in Portuguese](https://github.com/lucaslrodri/abntly/blob/v0.1.1/docs/manual-pt.pdf) (PDF), with the Portuguese names.
+- [Manual in English](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-en.pdf) (PDF), with the English names.
+- [Manual in Portuguese](https://github.com/lucaslrodri/abntly/blob/v0.1.0/docs/manual-pt.pdf) (PDF), with the Portuguese names.
 
 ## Standards implemented
 
@@ -182,4 +182,4 @@ abntly was inspired by these projects:
 
 ## License
 
-The package is distributed under the [MIT license](https://github.com/lucaslrodri/abntly/blob/v0.1.1/LICENSE).
+The package is distributed under the [MIT license](https://github.com/lucaslrodri/abntly/blob/v0.1.0/LICENSE).

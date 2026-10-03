@@ -26,7 +26,7 @@ sh scripts/link.sh     # faz @preview/abntly:<versão> apontar para esta cópia 
 sh scripts/fonts.sh    # baixa a New Computer Modern para fonts/ e a instala (Windows: scripts/fonts.ps1)
 ```
 
-O modelo, os exemplos e os READMEs importam o pacote pelo nome, `@preview/abntly:0.1.1`, como um autor faz. O
+O modelo, os exemplos e os READMEs importam o pacote pelo nome, `@preview/abntly:0.1.0`, como um autor faz. O
 `scripts/link.sh` liga o repositório à pasta de pacotes locais do Typst, de modo que esse nome leve à cópia de
 trabalho no `typst compile`, no `tt` e no editor. Os demais testes importam `src/lib.typ` pelo caminho.
 
@@ -110,7 +110,7 @@ Os PDFs dos manuais e dos exemplos completos, as imagens dos exemplos do manual,
 ## Nova versão
 
 Os READMEs apontam para o que está no repositório (manuais, exemplos e seus PDFs, modelo, licença, o README no outro
-idioma, imagens) pelo endereço da tag da versão (`v0.1.1`); só as âncoras são relativas, porque o `README.md` é
+idioma, imagens) pelo endereço da tag da versão (`v0.1.0`); só as âncoras são relativas, porque o `README.md` é
 mostrado no Typst Universe sem o repositório em volta. Ao mudar a versão no `typst.toml`:
 
 1. troque a versão nas importações (`@preview/abntly:<versão>`) do modelo, dos exemplos, do manual e dos READMEs, e

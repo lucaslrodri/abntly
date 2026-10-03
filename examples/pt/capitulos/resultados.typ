@@ -1,4 +1,4 @@
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 = Resultados <cap-resultados>
 

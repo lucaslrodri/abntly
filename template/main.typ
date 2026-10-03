@@ -13,7 +13,7 @@
 // O manual do pacote descreve cada função e o que a norma pede de cada elemento:
 // https://github.com/lucaslrodri/abntly
 // =====================================================================================================================
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 // --- Configuração do trabalho ---------------------------------------------------------------------------------------
 // A função `abntly` aplica a formatação da ABNT a todo o documento: página A4, margens, fontes, espaçamentos,

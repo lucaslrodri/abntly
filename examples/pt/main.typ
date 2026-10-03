@@ -5,7 +5,7 @@
 // Para compilar a partir da raiz do repositório:
 //   sh scripts/link.sh
 //   typst compile --font-path fonts examples/pt/main.typ
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 #show: trabalho-academico.with(
   dados: config-dados(

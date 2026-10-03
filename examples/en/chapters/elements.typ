@@ -1,4 +1,4 @@
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 // a simple bar chart, drawn with the shapes of Typst, for the figures of the example
 #let bars(..values) = box(height: 3cm, stack(dir: ltr, spacing: 6mm, ..values.pos().map(v => align(bottom,

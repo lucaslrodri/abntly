@@ -73,7 +73,7 @@ O pacote implementa os requisitos das normas listadas a seguir.
 O pacote requer o Typst #package.compiler ou superior. Para usá-lo, adicione a seguinte linha no início do arquivo:
 
 ```typ
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 ```
 
 O Typst baixa o pacote automaticamente na primeira compilação.
@@ -82,7 +82,7 @@ Para criar um trabalho novo a partir do modelo do pacote, que traz todos os elem
 o comando:
 
 ```sh
-typst init @preview/abntly:0.1.1
+typst init @preview/abntly:0.1.0
 ```
 
 == Dependências <dependencies>

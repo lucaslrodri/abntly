@@ -74,7 +74,7 @@ The package implements the requirements of the standards listed below.
 The package requires Typst #package.compiler or later. To use it, add the following line at the top of the file:
 
 ```typ
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 ```
 
 Typst downloads the package automatically on the first compilation.
@@ -83,7 +83,7 @@ To create a new work from the template of the package, which has every element o
 the command:
 
 ```sh
-typst init @preview/abntly:0.1.1
+typst init @preview/abntly:0.1.0
 ```
 
 == Dependencies <dependencies>

@@ -1,5 +1,5 @@
 // Trabalho acadêmico mínimo: só os elementos obrigatórios da ABNT NBR 14724:2024, na ordem da norma.
-#import "@preview/abntly:0.1.1": *
+#import "@preview/abntly:0.1.0": *
 
 #show: trabalho-academico.with(
   dados: config-dados(
