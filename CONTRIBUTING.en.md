@@ -14,8 +14,8 @@ scripts. To use the package, see the [README](README.en.md) and the [manual](doc
 | [Typst](https://typst.app/) ≥ 0.15.0 | compiling the package, the manual and the examples |
 | [Tytanic](https://typst-community.github.io/tytanic/) 0.4.1 (`tt`) | the test cases |
 
-The scripts are `sh` and run on macOS and Linux. On Windows, only `scripts/fonts.ps1` has a version of its own; the
-others need WSL or Git Bash.
+The scripts are `sh` and run on macOS and Linux. On Windows, only `scripts/fonts.ps1` and `scripts/install.ps1` have
+a version of their own; the others need WSL or Git Bash.
 
 ## Setup
 
@@ -29,6 +29,27 @@ sh scripts/fonts.sh    # downloads New Computer Modern into fonts/ and installs 
 The template, the examples and the READMEs import the package by its name, `@preview/abntly:0.1.1`, as an author
 does. `scripts/link.sh` links the repository into Typst's local package directory, so that this name resolves to the
 working copy in `typst compile`, in `tt` and in the editor. The other tests import `src/lib.typ` by its path.
+
+As an alternative, to have the local version without the working copy, the `install` scripts download the latest
+version tag from GitHub (the highest `v<version>`) and install the files it publishes on Typst Universe into Typst's
+local package directory, as `@local/abntly:<version>`:
+
+```sh
+sh scripts/install.sh                                          # macOS and Linux
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1   # Windows
+```
+
+Then `#import "@local/abntly:<version>": *` and `typst init @local/abntly:<version> <folder>` work before the version
+reaches Typst Universe; in the installed copy, the template imports the package from `@local`, so that the work
+created from it compiles. The copy does not follow the changes in the repository (running the script again replaces
+it) and does not serve the tests or the examples, which import `@preview/abntly` and need `scripts/link.sh`. The
+scripts do not depend on the repository and also run straight from GitHub, in the terminal (macOS and Linux) or in
+PowerShell (Windows):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.sh | sh
+irm https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.ps1 | iex
+```
 
 ## Folders
 

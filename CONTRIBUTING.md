@@ -14,8 +14,8 @@ geração. Para usar o pacote, veja o [README](README.md) e o [manual](docs/manu
 | [Typst](https://typst.app/) ≥ 0.15.0 | compilar o pacote, o manual e os exemplos |
 | [Tytanic](https://typst-community.github.io/tytanic/) 0.4.1 (`tt`) | os casos de teste |
 
-Os scripts são `sh` e rodam no macOS e no Linux. No Windows, só o `scripts/fonts.ps1` tem versão própria; os demais
-precisam do WSL ou do Git Bash.
+Os scripts são `sh` e rodam no macOS e no Linux. No Windows, só o `scripts/fonts.ps1` e o `scripts/install.ps1` têm
+versão própria; os demais precisam do WSL ou do Git Bash.
 
 ## Ambiente
 
@@ -29,6 +29,26 @@ sh scripts/fonts.sh    # baixa a New Computer Modern para fonts/ e a instala (Wi
 O modelo, os exemplos e os READMEs importam o pacote pelo nome, `@preview/abntly:0.1.1`, como um autor faz. O
 `scripts/link.sh` liga o repositório à pasta de pacotes locais do Typst, de modo que esse nome leve à cópia de
 trabalho no `typst compile`, no `tt` e no editor. Os demais testes importam `src/lib.typ` pelo caminho.
+
+Como alternativa, para ter a versão local sem a cópia de trabalho, os scripts `install` baixam a tag de versão mais
+recente do GitHub (a maior `v<versão>`) e instalam os arquivos que ela publica no Typst Universe na pasta de pacotes
+locais do Typst, como `@local/abntly:<versão>`:
+
+```sh
+sh scripts/install.sh                                          # macOS e Linux
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1   # Windows
+```
+
+Assim, `#import "@local/abntly:<versão>": *` e `typst init @local/abntly:<versão> <pasta>` funcionam antes de a versão
+chegar ao Typst Universe; na cópia instalada, o modelo importa o pacote de `@local`, para que o trabalho criado dele
+compile. A cópia não acompanha as mudanças do repositório (rodar o script de novo a substitui) e não serve aos testes
+nem aos exemplos, que importam `@preview/abntly` e pedem o `scripts/link.sh`. Os scripts não dependem do repositório e
+rodam também direto do GitHub, no terminal (macOS e Linux) ou no PowerShell (Windows):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.sh | sh
+irm https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.ps1 | iex
+```
 
 ## Pastas
 
