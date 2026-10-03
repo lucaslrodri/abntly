@@ -1,5 +1,5 @@
 // Minimal academic work: only the required elements of ABNT NBR 14724:2024, in the order of the standard.
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 #show: abntly.with(
   lang: "en",

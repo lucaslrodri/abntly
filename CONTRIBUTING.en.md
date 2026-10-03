@@ -26,7 +26,7 @@ sh scripts/link.sh     # makes @preview/abntly:<version> resolve to this copy (-
 sh scripts/fonts.sh    # downloads New Computer Modern into fonts/ and installs it (Windows: scripts/fonts.ps1)
 ```
 
-The template, the examples and the READMEs import the package by its name, `@preview/abntly:0.1.0`, as an author
+The template, the examples and the READMEs import the package by its name, `@preview/abntly:0.1.1`, as an author
 does. `scripts/link.sh` links the repository into Typst's local package directory, so that this name resolves to the
 working copy in `typst compile`, in `tt` and in the editor. The other tests import `src/lib.typ` by its path.
 
@@ -90,7 +90,7 @@ READMEs and `thumbnail.png` are committed. After changing the package, run `sh s
 ## New version
 
 The READMEs reach what is in the repository (the manuals, the examples and their PDFs, the template, the licence, the
-README in the other language, the pictures) by the address of the tag of the version (`v0.1.0`); only the anchors
+README in the other language, the pictures) by the address of the tag of the version (`v0.1.1`); only the anchors
 are relative, because `README.md` is shown on Typst Universe without the repository around it. When the version
 changes in `typst.toml`:
 

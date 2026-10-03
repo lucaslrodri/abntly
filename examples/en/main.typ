@@ -5,7 +5,7 @@
 // To compile from the root of the repository:
 //   sh scripts/link.sh
 //   typst compile --font-path fonts examples/en/main.typ
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 #show: abntly.with(
   lang: "en",
