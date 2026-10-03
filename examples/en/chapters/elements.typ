@@ -123,6 +123,17 @@ and a specific note.
   #note(call: 1)[Includes the theses defended under joint supervision.]
 ]
 
+A table in a plain `figure` takes the same rules with `ibge-table`; the title and the source keep the width of the
+text block, and the figure may float, as #auto-ref(<tab-grants>) does.
+
+#figure(placement: auto, caption: [Grants awarded, by level -- University of Brazil -- 2025])[
+  #ibge-table(columns: (5cm, 2.5cm), align: (left, right),
+    table.header([Level], [Grants]),
+    [Master's], [120],
+    [Doctorate], [85])
+  #source()
+] <tab-grants>
+
 == Equations
 
 The arithmetic mean of $n$ values is given by @eq-mean:
@@ -132,6 +143,11 @@ $ sigma^2 = 1 / n sum_(i = 1)^n (x_i - overline(x))^2 $
 In an equation of several lines, only the line with a label takes a number, as @eq-square:
 $ (a + b)^2 &= (a + b)(a + b) \
             &= a^2 + 2 a b + b^2 #<eq-square> $
+The text that goes on after an equation, past a blank line, starts without the indent of its first line, with
+`no-indent`:
+$ s = sqrt(sigma^2) $
+
+#no-indent[where $s$ is the standard deviation.]
 
 == Algorithms
 

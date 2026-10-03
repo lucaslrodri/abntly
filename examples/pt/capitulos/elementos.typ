@@ -122,6 +122,17 @@ nota específica.
   #nota(chamada: 1)[Inclui as teses defendidas em cotutela.]
 ]
 
+Uma tabela em uma `figure` comum recebe os mesmos traços com `tabela-ibge`; o título e a fonte ficam na largura da
+mancha gráfica, e a figura pode flutuar, como a #auto-ref(<tab-bolsas>).
+
+#figure(placement: auto, caption: [Bolsas concedidas, por nível -- Universidade do Brasil -- 2025])[
+  #tabela-ibge(columns: (5cm, 2.5cm), align: (left, right),
+    table.header([Nível], [Bolsas]),
+    [Mestrado], [120],
+    [Doutorado], [85])
+  #fonte()
+] <tab-bolsas>
+
 == Equações
 
 A média aritmética de $n$ valores é dada pela @eq-media:
@@ -131,6 +142,10 @@ $ sigma^2 = 1 / n sum_(i = 1)^n (x_i - overline(x))^2 $
 Em uma equação de várias linhas, apenas a linha com rótulo recebe número, como a @eq-quadrado:
 $ (a + b)^2 &= (a + b)(a + b) \
             &= a^2 + 2 a b + b^2 #<eq-quadrado> $
+O texto que continua uma equação depois de uma linha em branco começa sem o recuo da primeira linha, com `sem-recuo`:
+$ s = sqrt(sigma^2) $
+
+#sem-recuo[em que $s$ é o desvio padrão.]
 
 == Algoritmos
 
