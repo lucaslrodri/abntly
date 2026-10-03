@@ -7,12 +7,12 @@
 //   `main-matter`, `back-matter`); the default colour of the links (`dark-indigo`).
 // - src/fonts.typ: the typography (New Computer Modern).
 // - src/spacing.typ: the spacing (the 1.5 of NBR 14724 between the lines, the distances and indents around each
-//   element).
+//   element); the paragraph without the indent of its first line (`no-indent`).
 // - src/elements.typ: the form of the elements of the text, with the functions the author writes inside a figure
 //   (`source`, `legend`, `note`, and `call` in a table), a reference with its name (`auto-ref`), the quadro
 //   (`frame`), the figure in a box as wide as its illustration (`fitted`), where a table with a header is a table of
-//   the IBGE, the nature of the work on the title page and the approval sheet (`preamble`), and the elements beyond
-//   the norms: the algorithm (`algorithm`), the subfigures (`subfigures`, over the package subpar), the part
+//   the IBGE, the same table for a plain figure (`ibge-table`), the nature of the work on the title page and the
+//   approval sheet (`preamble`), and the elements beyond the norms: the algorithm (`algorithm`), the subfigures (`subfigures`, over the package subpar), the part
 //   (`part`), the figure lying down (`sideways`), the stamp of a draft (`stamp`) and the signature line
 //   (`signature`). The displayed equations are numbered over the package equate.
 // - src/words.typ: the words of the package in Portuguese and English (src/lang.toml), over the package linguify;
@@ -32,8 +32,9 @@
 // - src/aliases.typ: the name of each function in Portuguese, with its parameters and its help in Portuguese (the
 //   main function is `trabalho-academico`). `auto-ref`, `errata` and `apud` have the same name in both languages.
 #import "abntly.typ": abntly
-#import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, preamble, algorithm, subfigures, part,
-  sideways, stamp, signature)
+#import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, ibge-table, preamble, algorithm,
+  subfigures, part, sideways, stamp, signature)
+#import "spacing.typ": no-indent
 #import "layout.typ": front-matter, main-matter, back-matter, dark-indigo
 #import "words.typ": config-names
 #import "info.typ": config-info
@@ -44,7 +45,7 @@
 #import "citations.typ": apud
 // the Portuguese names, each a function with its parameters and its help in Portuguese (src/aliases.typ)
 #import "aliases.typ": (trabalho-academico, indigo-escuro, config-nomes, config-dados, pretextual, textual,
-  postextual, fonte, legenda, nota, chamada, quadro, ajustada, preambulo, algoritmo, subfiguras, parte, deitada,
-  carimbo, assinatura, capa, folha-de-rosto, folha-de-aprovacao, ficha-catalografica, dedicatoria, agradecimentos,
-  epigrafe, resumo, palavras-chave, lista-de, lista-de-figuras, lista-de-tabelas, lista-de-quadros, lista-de-siglas,
-  lista-de-simbolos, apendice, anexo, glossario, indice, com-dados)
+  postextual, fonte, legenda, nota, chamada, quadro, ajustada, tabela-ibge, sem-recuo, preambulo, algoritmo,
+  subfiguras, parte, deitada, carimbo, assinatura, capa, folha-de-rosto, folha-de-aprovacao, ficha-catalografica,
+  dedicatoria, agradecimentos, epigrafe, resumo, palavras-chave, lista-de, lista-de-figuras, lista-de-tabelas,
+  lista-de-quadros, lista-de-siglas, lista-de-simbolos, apendice, anexo, glossario, indice, com-dados)

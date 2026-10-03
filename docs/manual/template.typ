@@ -286,8 +286,8 @@
 }
 #let modules = (
   pt: _parse("pt", (read("../../src/aliases.typ"), read("pt/extra.typ"))),
-  en: _parse("en", ("abntly", "info", "words", "layout", "elements", "structure", "index", "citations").map(name =>
-    read("../../src/" + name + ".typ"))),
+  en: _parse("en", ("abntly", "info", "words", "layout", "spacing", "elements", "structure", "index", "citations")
+    .map(name => read("../../src/" + name + ".typ"))),
 )
 
 #let _api-style(lang) = api.style + (

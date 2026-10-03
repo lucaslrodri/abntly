@@ -58,6 +58,8 @@
 // are written as)
 #same(repr(ajustada(largura: 5cm, rotulo: <a>, caption: [F], rect())),
   repr(fitted(width: 5cm, label: <a>, caption: [F], rect())))
+#same(tabela-ibge(columns: 2, table.header([A], [B]), [1], [2]), ibge-table(columns: 2, table.header([A], [B]), [1], [2]))
+#same(sem-recuo[corpo], no-indent[corpo])
 #same(parte[Título], part[Título])
 #same(deitada[corpo], sideways[corpo])
 #same(subfiguras(figure(rect(), caption: [a]), colunas: 1, espaco: 2em, titulo: [S], rotulo: <s>),

@@ -2,10 +2,10 @@
 // A chapter with every element whose spacing and indents src/spacing.typ sets: the five levels of heading,
 // paragraphs, a list, a figure, an equation, a long quote, alíneas, code and footnotes; each block with a paragraph
 // after it, so that the space after a block is its own. A case includes it after `#show: setup`.
-#import "../../../src/lib.typ": source
+#import "../../../src/lib.typ": source, no-indent
 
-// a paragraph that goes on after a display, a quote or a list: no indent on its first line
-#let segue(texto) = par(first-line-indent: (amount: 0pt, all: true), texto)
+// a paragraph that goes on after a display, a quote or a list: no indent on its first line (`no-indent`)
+#let segue(texto) = no-indent(texto)
 
 #set heading(numbering: "1.1")
 

@@ -13,7 +13,7 @@
 // O manual do pacote descreve cada função e o que a norma pede de cada elemento:
 // https://github.com/lucaslrodri/abntly
 // =====================================================================================================================
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 // --- Configuração do trabalho ---------------------------------------------------------------------------------------
 // A função `abntly` aplica a formatação da ABNT a todo o documento: página A4, margens, fontes, espaçamentos,
@@ -226,7 +226,8 @@ O quadro apresenta informações textuais, em linhas fechadas, como o @qua-exemp
 A tabela apresenta dados numéricos e segue as normas de apresentação tabular do @ibge: traços horizontais no
 topo, abaixo do cabeçalho e no fim, sem traços nas laterais. Dentro da função `fitted`, a tabela com cabeçalho
 (`table.header`) recebe os traços automaticamente, como a @tab-exemplo[Tabela]. Uma tabela que não cabe na página
-continua na página seguinte, com o cabeçalho repetido.
+continua na página seguinte, com o cabeçalho repetido. Fora da função `fitted`, uma tabela em um `figure` comum
+recebe os mesmos traços escrita com `ibge-table`, no lugar de `table`; o título e a fonte ficam na largura do texto.
 
 #fitted(label: <tab-exemplo>, caption: [Trabalhos defendidos, por tipo -- Universidade do Brasil -- 2024-2025])[
   #table(columns: (5cm, 2.5cm, 2.5cm), align: (left, right, right),
@@ -241,6 +242,10 @@ continua na página seguinte, com o cabeçalho repetido.
 
 Uma equação destacada é numerada quando tem um rótulo:
 $ a^2 + b^2 = c^2 $ <eq-pitagoras>
+
+#no-indent[em que $c$ é a hipotenusa. O texto que continua uma equação depois de uma linha em branco começa sem o
+  recuo da primeira linha com `no-indent`.]
+
 A remissão `@eq-pitagoras` produz o número, como em @eq-pitagoras. Para as figuras, as tabelas e as seções, a
 remissão pode levar a palavra (`@fig-exemplo[Figura]`) ou encontrá-la sozinha, com `#auto-ref(<fig-exemplo>)`.
 

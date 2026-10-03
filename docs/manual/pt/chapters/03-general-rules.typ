@@ -70,6 +70,18 @@ configuração é necessária.
   chamada da função principal.
 ]
 
+O parágrafo que continua depois de uma equação destacada, de uma citação longa ou de uma lista pertence ao anterior
+e começa sem o recuo: escreva-o com `sem-recuo`.
+
+```example
+A potência é dada por
+$ P = V I $
+
+#sem-recuo[em que $V$ é a tensão e $I$ a corrente.]
+```
+
+#reference("sem-recuo")
+
 == Paginação <pagination>
 
 #norm-box("NBR 14724:2024, 5.3", "required", "implemented")[
@@ -303,12 +315,29 @@ páginas.
 
 #page-example("long-table", pages: (1, 2))
 
+Fora da função `ajustada`, uma tabela em uma `figure` comum recebe os mesmos traços com `tabela-ibge`, escrita com os
+argumentos de `table`: o título, a fonte e as notas passam a ocupar a largura da mancha gráfica, e a figura pode
+flutuar com `placement`. Uma `figure` não continua nas páginas seguintes.
+
+```example
+#figure(caption: [Produção de casulos do bicho-da-seda,
+  por Unidade da Federação -- Brasil -- 1974])[
+  #tabela-ibge(columns: (4cm, 3cm, 3cm),
+    align: (left, right, right),
+    table.header([Unidade da Federação],
+      [Produção (t)], [Percentual (%)]),
+    [Paraná], [4 210], [61,2],
+    [São Paulo], [2 670], [38,8])
+  #fonte[IBGE (1975).]
+]
+```
+
 #remark[
-  Uma tabela sem `table.header`, ou fora da função `ajustada`, não recebe os traços do IBGE: ela mantém as linhas
-  definidas pelo autor.
+  Uma tabela sem `table.header`, ou fora de `ajustada` e de `tabela-ibge`, não recebe os traços do IBGE: ela mantém
+  as linhas definidas pelo autor.
 ]
 
-#reference("chamada")
+#reference("tabela-ibge", "chamada")
 
 == Equações <equations>
 

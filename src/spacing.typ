@@ -12,7 +12,8 @@
 // short line and distances that stretch or shrink to fill the page.
 //
 // The main function (src/abntly.typ) applies `spacing` after `fonts`; the values are public, for the other files of
-// the package, which build their distances from them.
+// the package, which build their distances from them. The author calls one function of this file: `no-indent`, the
+// paragraph without the indent of its first line.
 
 #import "fonts.typ": elements
 
@@ -52,6 +53,15 @@
 )
 // the paragraph indent, which the norms leave open: a decision of the package; the alíneas take it too
 #let indent = 1.3cm
+
+// The text that goes on after a displayed equation, a long quote or a list belongs to the paragraph before it ("em
+// que x é…"): no indent on its first line. The one function of this file the author calls: a name for the `par`.
+/// Creates a paragraph without the indent of its first line: the text that goes on after a displayed equation, a long
+/// quote or a list, as in "where $x$ is…", which belongs to the paragraph before it.
+///
+/// - body (content): Text of the paragraph.
+/// -> content
+#let no-indent(body) = par(first-line-indent: 0pt, body)
 
 // a distance in em of the body, in the em of an element `s` times the body (a heading, the long quote, the notes)
 #let in-size(x, s) = x.abs + x.em / s * 1em

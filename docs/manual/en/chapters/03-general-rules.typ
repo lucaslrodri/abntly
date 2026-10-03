@@ -69,6 +69,18 @@ setting is needed.
   the call of the main function.
 ]
 
+The paragraph that goes on after a displayed equation, a long quote or a list belongs to the one before it and
+starts without the indent: write it with `no-indent`.
+
+```example
+The power is given by
+$ P = V I $
+
+#no-indent[where $V$ is the voltage and $I$ the current.]
+```
+
+#reference("no-indent")
+
 == Pagination <pagination>
 
 #norm-box("NBR 14724:2024, 5.3", "required", "implemented")[
@@ -304,12 +316,29 @@ the IBGE. No setting is needed. The following example shows a table of 40 rows o
 
 #page-example("long-table", pages: (1, 2))
 
+Outside `fitted`, a table in a plain `figure` takes the same rules with `ibge-table`, written with the arguments of
+`table`: the title, the source and the notes then keep the width of the text block, and the figure may float with
+`placement`. A `figure` does not go on over pages.
+
+```example
+#figure(caption: [Production of silkworm cocoons,
+  by Federation Unit -- Brazil -- 1974])[
+  #ibge-table(columns: (4cm, 3cm, 3cm),
+    align: (left, right, right),
+    table.header([Federation Unit],
+      [Production (t)], [Percentage (%)]),
+    [Paraná], [4 210], [61.2],
+    [São Paulo], [2 670], [38.8])
+  #source[IBGE (1975).]
+]
+```
+
 #remark[
-  A table without `table.header`, or outside the function `fitted`, does not take the rules of the IBGE: it keeps
+  A table without `table.header`, or outside `fitted` and `ibge-table`, does not take the rules of the IBGE: it keeps
   the lines set by the author.
 ]
 
-#reference("call")
+#reference("ibge-table", "call")
 
 == Equations <equations>
 

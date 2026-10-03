@@ -7,8 +7,9 @@
 // entries of the index, the members of the board, the people of the work); the data `com-dados` gives keep their
 // English keys.
 #import "abntly.typ": abntly
-#import "elements.typ": (source, legend, note, call, frame, fitted, preamble, algorithm, subfigures, part, sideways,
-  stamp, signature)
+#import "elements.typ": (source, legend, note, call, frame, fitted, ibge-table, preamble, algorithm, subfigures, part,
+  sideways, stamp, signature)
+#import "spacing.typ": no-indent
 #import "layout.typ": front-matter, main-matter, back-matter, dark-indigo
 #import "words.typ": config-names
 #import "info.typ": config-info
@@ -246,6 +247,29 @@
 ///   parâmetro, e não depois da chamada.
 /// -> content
 #let ajustada(..args, largura: auto, rotulo: none) = fitted(..args, width: largura, label: rotulo)
+
+/// Gera uma tabela no padrão do IBGE para uma `figure` comum: os traços horizontais das normas de apresentação
+/// tabular (NBR 14724:2024, seção 5.9) — um grosso no topo e na base, um duplo sob o cabeçalho, finos entre as
+/// linhas, nenhum nas laterais — e o texto no tamanho reduzido das tabelas. Aceita os argumentos de `table`, com o
+/// cabeçalho em `table.header(...)`, que é obrigatório. Escreva-a dentro de uma `figure`, com `fonte` e `nota` depois
+/// dela, como de costume: o título, a fonte e as notas ocupam a largura da mancha gráfica, e a figura pode flutuar
+/// com `placement`. Uma `figure` não quebra entre páginas.
+///
+/// Para uma tabela cujo título, fonte e notas se limitam à largura da própria tabela, ou que continua nas páginas
+/// seguintes com o cabeçalho e "(continua)", use `ajustada`, em que uma tabela com cabeçalho recebe essa forma
+/// por si só.
+///
+/// - ..args (arguments): Argumentos de `table`: `columns`, `align`, o cabeçalho em `table.header(...)` e as células,
+///   entre outros. Um `stroke` é ignorado: os traços são os do IBGE.
+/// -> content
+#let tabela-ibge(..args) = ibge-table(..args)
+
+/// Gera um parágrafo sem o recuo da primeira linha: o texto que continua depois de uma equação destacada, de uma
+/// citação longa ou de uma lista, como em "em que $x$ é…", que pertence ao parágrafo anterior.
+///
+/// - corpo (content): Texto do parágrafo.
+/// -> content
+#let sem-recuo(corpo) = no-indent(corpo)
 
 /// Gera o bloco da natureza do trabalho: tipo do trabalho, objetivo, instituição e área de concentração. O bloco é
 /// composto em espaço simples, alinhado do meio da mancha para a margem direita (NBR 14724:2024, seção 5.2).

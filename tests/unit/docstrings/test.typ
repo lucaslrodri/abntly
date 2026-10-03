@@ -12,7 +12,8 @@
   show-example: tidy.show-example.show-example.with(layout: (code, preview, ..options) => { code; preview }),
 )
 
-#let modules = ("abntly", "aliases", "elements", "index", "info", "layout", "structure", "words", "citations")
+#let modules = ("abntly", "aliases", "elements", "index", "info", "layout", "spacing", "structure", "words",
+  "citations")
 #let parsed = modules.map(name => tidy.parse-module(read("../../../src/" + name + ".typ"), name: name, scope: scope,
   old-syntax: true))
 #for docs in parsed {

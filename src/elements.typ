@@ -9,8 +9,9 @@
 // quadro; `fitted`, the figure in a box as wide as its illustration, so that its title and its foot respect the
 // margins of the illustration (14724, 5.8); a table with a header inside it takes the horizontal rules of the package
 // (`ibge`) and goes on over pages with the header, the title and "(continua)" / "(continuação)" / "(conclusão)" on
-// each (IBGE, 8.3); `preamble`, the nature of the work on the title page and the approval sheet, from the middle of
-// the text block to the right margin (14724, 5.2). Beyond the norms: `algorithm`, `subfigures` (over the package
+// each (IBGE, 8.3); `ibge-table`, the same rules for a table in a plain `figure`; `preamble`, the nature of the work
+// on the title page and the approval sheet, from the middle of the text block to the right margin (14724, 5.2).
+// Beyond the norms: `algorithm`, `subfigures` (over the package
 // subpar), `part`, `sideways`, `signature` and `stamp` (the watermark of a draft, for the background of a page). The
 // only `context`: the number of each title, the width of a `fitted`, the cell of such a table that names its page,
 // the call of a note in a table, the numbering by chapter and the alignment of the parts of a set of subfigures.
@@ -84,6 +85,8 @@
   let fields = it.fields()
   let cells = fields.remove("children")
   let _ = fields.remove("stroke", default: none)
+  // the label of the author's table (the one of `ibge-table`, or one of their own): a field too, which `table` refuses
+  let _ = fields.remove("label", default: none)
   let n = column-count(fields.at("columns", default: 1))
   let i = cells.position(c => c.func() == table.header)
   let header = cells.at(i)
@@ -175,6 +178,10 @@
     show figure.caption: set par(justify: false)
     it
   }
+  // the table of an `ibge-table` (which labels it), in a figure of the author's own: rebuilt as the one of a `fitted`.
+  // The rule of the figure above, deeper than this one, sets the size of the text first, and the rebuilt table, which
+  // that rule leaves alone, comes out inside it
+  show <abntly-ibge-table>: t => ibge(t, table-font-size)
   // the quadro: closed lines of 0.4 pt, an absolute thickness as the rule of the footnotes (no norm asks for them
   // nor gives their thickness: a decision of the package); a `stroke` the author gives to the table wins
   show figure.where(kind: "quadro"): set table(stroke: 0.4pt)
@@ -410,6 +417,33 @@
     let box = block(width: w, fig)
     if quadro { box } else { [#box<abntly-fitted>] }
   })))
+}
+
+// --- the table of the IBGE in a plain figure -------------------------------------------------------------------------
+// The rules of `ibge` for a table the author puts in a `figure` of their own (the title and the foot at the width of
+// the text block, the figure free to float with `placement`), where `fitted` would box it: the table carries a label,
+// and the rule of `elements` on that label rebuilds it as `ibge` does for the tables of a `fitted`, in the size of the
+// text of the tables, which only that rule knows (the rule of the figure sets the size first, the rebuilt table comes
+// out inside it). Written inside a figure: outside one the text keeps the size of the body, and a break over pages
+// would look for the title of a figure that is not there.
+/// Creates a table in the pattern of the IBGE for a plain `figure`: the horizontal rules of the tabular presentation
+/// standards (NBR 14724:2024, section 5.9) — a heavy one at the top and at the bottom, a double one under the header,
+/// light ones between the rows, none at the sides — and the text in the reduced size of the tables. It takes the
+/// arguments of `table`, with the header in `table.header(...)`, which it requires. Write it inside a `figure`, with
+/// `source` and `note` after it as usual: the title, the source and the notes keep the width of the text block, and
+/// the figure may float with `placement`. A `figure` does not break over pages.
+///
+/// For a table whose title, source and notes stay within the width of the table itself, or that goes on over pages
+/// with its header and "(continua)", use `fitted`, where a table with a header takes this form by itself.
+///
+/// - ..args (arguments): Arguments of `table`: `columns`, `align`, the header in `table.header(...)` and the cells,
+///   among others. A `stroke` is ignored: the rules are those of the IBGE.
+/// -> content
+#let ibge-table(..args) = {
+  assert(args.pos().any(c => type(c) == content and c.func() == table.header),
+    message: "ibge-table: takes the arguments of table with the header in table.header(...), under which the "
+      + "IBGE puts a rule; got a table without table.header")
+  [#table(..args)<abntly-ibge-table>]
 }
 
 // --- elements beyond the norms ---------------------------------------------------------------------------------------

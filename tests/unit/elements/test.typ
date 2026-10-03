@@ -41,6 +41,17 @@
 #assert.eq(rebuilt.children.last().func(), table.footer)
 #assert.eq(rebuilt.children.last().repeat, false)
 
+// the table of a plain figure (`ibge-table`): the author's table with the label the rule of `elements` rebuilds, only
+// with a header, which the rebuild needs
+#let plain = ibge-table(columns: 2, align: center, table.header([A], [B]), [1], [2])
+#assert.eq(plain.func(), table)
+#assert.eq(plain.label, <abntly-ibge-table>)
+#assert.eq((plain.columns, plain.align), ((auto, auto), center))
+#fails(() => ibge-table(columns: 2, [1], [2]),
+  "ibge-table: takes the arguments of table with the header in table.header(...)")
+// rebuilt as any table of the IBGE: the label of the author's table is not a field of the new one
+#assert.eq(ibge(plain, 10em / 12).label, <abntly-ibge>)
+
 // --- the numbering of the equations -----------------------------------------------------------------------------------
 // a pattern with two numbers counts by chapter
 #assert(by-chapter("(1.1)"))
