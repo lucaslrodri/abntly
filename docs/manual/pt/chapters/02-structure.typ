@@ -289,6 +289,12 @@ página. As quebras de linha (`\`) e o itálico são definidos pelo autor, como 
   substantivos próprios e os nomes científicos.
 ]
 
+#remark[
+  A norma não fixa a quantidade de palavras-chave: a NBR 6028:2021 diz só como grafá-las, e o exemplo dela traz
+  cinco. O limite "de três a cinco" que costuma ser pedido é regra da instituição ou do periódico. A função
+  `palavras-chave` aceita qualquer número delas.
+]
+
 A função `resumo` gera o título e o texto do resumo. As palavras-chave são informadas no fim do texto, com a função
 `palavras-chave`, uma por argumento. O parâmetro `idioma` define o idioma do resumo em língua estrangeira: o
 título, o rótulo das palavras-chave e a hifenização passam a ser os desse idioma. O exemplo a seguir gera

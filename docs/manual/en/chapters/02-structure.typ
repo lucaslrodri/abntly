@@ -294,6 +294,12 @@ bottom of the page. The line breaks (`\`) and the italics are set by the author,
   except for proper nouns and scientific names.
 ]
 
+#remark[
+  The standard does not set the number of keywords: NBR 6028:2021 only says how to write them, and its example has
+  five. The "three to five" limit often asked for is a rule of the institution or of the journal. The function
+  `keywords` takes any number of them.
+]
+
 The function `abstract` creates the title and the text of the abstract. The keywords are given at the end of the
 text, with the function `keywords`, one per argument. The `lang` parameter sets the language of the abstract in a
 foreign language: the title, the label of the keywords and the hyphenation become those of that language.

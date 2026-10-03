@@ -109,7 +109,8 @@
 // ]
 
 // --- Resumo na língua vernácula [OBRIGATÓRIO] (seção 4.2.1.7; NBR 6028:2021) ----------------------------------------
-// Um único parágrafo, de 150 a 500 palavras, seguido das palavras-chave.
+// Um único parágrafo, de 150 a 500 palavras, seguido das palavras-chave. A ABNT não fixa quantas são: a NBR 6028:2021
+// só diz como grafá-las (o exemplo dela tem cinco); o "de três a cinco" é regra da instituição ou do periódico.
 #abstract[
   O resumo apresenta, em um único parágrafo, o objetivo, o método, os resultados e as conclusões do trabalho. A
   NBR 6028:2021 recomenda de 150 a 500 palavras para os trabalhos acadêmicos e o uso do verbo na terceira pessoa.
