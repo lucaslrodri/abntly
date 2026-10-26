@@ -31,9 +31,13 @@ jobs:
       - name: Download fonts
         run: sh scripts/fonts.sh --no-install
 
-      # The template and the examples import `@preview/abntly:<version>`: point it to this checkout.
-      - name: Link the package
-        run: sh scripts/link.sh
+      # The template and the examples import `@preview/abntly:<version>`, which scripts/check.sh links to this
+      # checkout with gotpm (`gotpm install -e -n preview`); its version is pinned here.
+      - name: Install gotpm
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL https://github.com/npikall/gotpm/releases/download/v0.8.0/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Setup Tytanic
         uses: typst-community/setup-tytanic@v1

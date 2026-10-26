@@ -3,7 +3,7 @@
 // of the text. The text of each chapter is in a file of the folder `chapters/`.
 //
 // To compile from the root of the repository:
-//   sh scripts/link.sh
+//   export TYPST_PACKAGE_PATH=$(mktemp -d) && gotpm install -e -n preview
 //   typst compile --font-path fonts examples/en/main.typ
 #import "@preview/abntly:0.1.1": *
 

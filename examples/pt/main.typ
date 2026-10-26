@@ -3,7 +3,7 @@
 // de cada capítulo fica em um arquivo da pasta `capitulos/`.
 //
 // Para compilar a partir da raiz do repositório:
-//   sh scripts/link.sh
+//   export TYPST_PACKAGE_PATH=$(mktemp -d) && gotpm install -e -n preview
 //   typst compile --font-path fonts examples/pt/main.typ
 #import "@preview/abntly:0.1.1": *
 

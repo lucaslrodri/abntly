@@ -16,8 +16,9 @@
 #
 # `sh scripts/readme.sh --check` writes nothing and fails when a README, a picture or a PDF is out of date
 # (scripts/check.sh runs it); on the CI (`CI` set) a picture or a PDF that differs only warns, since its bytes may
-# depend on the system. The examples import the package by its name: `sh scripts/link.sh` first. Only the fonts
-# of fonts/ (`sh scripts/fonts.sh`) are used; any warning fails the run.
+# depend on the system. The examples import the package by its name, which the script links to this working copy
+# with gotpm, in a temporary package folder of its own. Only the fonts of fonts/ (`sh scripts/fonts.sh`) are
+# used; any warning fails the run.
 set -eu
 cd "$(dirname "$0")/.."
 
@@ -38,10 +39,16 @@ repository=$(sed -n 's/^repository *= *"https:\/\/github\.com\/\(.*\)"/\1/p' typ
 version=$(sed -n 's/^version *= *"\(.*\)"/\1/p' typst.toml | head -n 1)
 url="https://raw.githubusercontent.com/$repository/v$version/$out"
 
-sh scripts/link.sh --check
+command -v gotpm > /dev/null || fail "gotpm is not installed (CONTRIBUTING.md, Setup)"
+# @preview/abntly:<version>, the name the template and the examples import, resolves to this working copy only
+# while the script runs: gotpm links it in a package folder of its own (TYPST_PACKAGE_PATH, read by typst, tt and
+# gotpm), never in the system's, so every other work keeps getting the version published on Typst Universe
+TYPST_PACKAGE_PATH=$(mktemp -d)
+export TYPST_PACKAGE_PATH
+gotpm install -e -n preview > /dev/null
 rm -rf "$tmp"
 mkdir -p "$tmp"
-trap 'rm -rf "$tmp"' EXIT
+trap 'rm -rf "$tmp" "$TYPST_PACKAGE_PATH"' EXIT
 
 # typst compile, failing on any warning: the arguments of the compilation
 compile() {

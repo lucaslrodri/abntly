@@ -9,8 +9,9 @@
 # is not shows up as a failure of `tt run`, with the differences in the `diff/` folder of the case.
 # `sh scripts/examples.sh --remove` deletes the pictures, and the cases only compile again.
 #
-# The works import the package by its name: `sh scripts/link.sh` first. Only the fonts of fonts/
-# (`sh scripts/fonts.sh`) are used; any warning fails the run.
+# The works import the package by its name, which the script links to this working copy with gotpm, in a
+# temporary package folder of its own. Only the fonts of fonts/ (`sh scripts/fonts.sh`) are used; any warning
+# fails the run.
 set -eu
 cd "$(dirname "$0")/.."
 
@@ -24,7 +25,14 @@ if [ "${1:-}" = "--remove" ]; then
   exit 0
 fi
 
-sh scripts/link.sh --check
+command -v gotpm > /dev/null || { echo "error: gotpm is not installed (CONTRIBUTING.md, Setup)" >&2; exit 1; }
+# @preview/abntly:<version>, the name the template and the examples import, resolves to this working copy only
+# while the script runs: gotpm links it in a package folder of its own (TYPST_PACKAGE_PATH, read by typst, tt and
+# gotpm), never in the system's, so every other work keeps getting the version published on Typst Universe
+TYPST_PACKAGE_PATH=$(mktemp -d)
+export TYPST_PACKAGE_PATH
+trap 'rm -rf "$TYPST_PACKAGE_PATH"' EXIT
+gotpm install -e -n preview > /dev/null
 # a case with a `ref/` folder is one Tytanic compares; without it, one it only compiles
 for case in $cases; do
   mkdir -p "tests/$case/ref"

@@ -13,68 +13,52 @@ scripts. To use the package, see the [README](README.en.md) and the [manual](doc
 | ---- | -------- |
 | [Typst](https://typst.app/) ≥ 0.15.0 | compiling the package, the manual and the examples |
 | [Tytanic](https://typst-community.github.io/tytanic/) 0.4.1 (`tt`) | the test cases |
-| [gotpm](https://github.com/npikall/gotpm) 0.8.0 (optional) | installing the package into Typst's package directory |
+| [gotpm](https://github.com/npikall/gotpm) 0.8.0 | installing the package into Typst's package directory |
 
-The scripts are `sh` and run on macOS and Linux. On Windows, only `scripts/fonts.ps1` and `scripts/install.ps1` have
-a version of their own; the others need WSL or Git Bash.
+The scripts are `sh` and run on macOS and Linux. On Windows, only `scripts/fonts.ps1` has a version of its own; the
+others need WSL or Git Bash. gotpm runs on the three systems (`brew install npikall/tap/gotpm`, or the installer in
+its README).
 
 ## Setup
 
 ```sh
 git clone https://github.com/lucaslrodri/abntly
 cd abntly
-sh scripts/link.sh     # makes @preview/abntly:<version> resolve to this copy (--remove undoes it)
-sh scripts/fonts.sh    # downloads New Computer Modern into fonts/ and installs it (Windows: scripts/fonts.ps1)
+gotpm install -e      # @local/abntly:<version>, a link to this copy (editable)
+sh scripts/fonts.sh   # downloads New Computer Modern into fonts/ and installs it (Windows: scripts/fonts.ps1)
 ```
 
-The template, the examples and the READMEs import the package by its name, `@preview/abntly:0.1.1`, as an author
-does. `scripts/link.sh` links the repository into Typst's local package directory, so that this name resolves to the
-working copy in `typst compile`, in `tt` and in the editor. The other tests import `src/lib.typ` by its path.
+During development, the package is always installed under `@local`, never under `@preview` in the system's package
+directory. A `@preview/abntly:<version>` installed there would take the place of the version published on Typst
+Universe, in every work on the machine. With `gotpm install -e`, `#import "@local/abntly:<version>": *` resolves to
+the working copy in `typst compile` and in the editor.
+
+The template, the examples and the READMEs import the package by its published name, `@preview/abntly:0.1.1`, as an
+author does (Typst Universe requires it of the template). The scripts that compile them (`check.sh`, `examples.sh`,
+`readme.sh`, `thumbnail.sh`) link that name to the working copy only while they run, in a temporary package
+directory, the one of `TYPST_PACKAGE_PATH`, which `typst`, `tt` and gotpm read. A new version needs no step of its
+own. The other tests import `src/lib.typ` by its path.
 
 ### Local installation with gotpm
 
-[gotpm](https://github.com/npikall/gotpm) installs the package into Typst's package directory from this copy, with
-the same commands on macOS, Linux and Windows (`brew install npikall/tap/gotpm`, or the installer in its README):
+gotpm installs the package into Typst's package directory, with the same commands on macOS, Linux and Windows:
 
 ```sh
 gotpm install -e                                  # @local/abntly:<version>, a link to this copy (editable)
 gotpm install                                     # @local/abntly:<version>, a copy with only the package's files
-gotpm install -e -n preview                       # @preview/abntly:<version>, the same as scripts/link.sh
 gotpm install -r github.com/lucaslrodri/abntly    # the highest v<version> tag on GitHub, without this copy (-t HEAD: main)
 ```
 
 The copy holds what goes to Typst Universe: the `exclude` of `typst.toml` and `.gitignore` are left out, as in
 `scripts/package.sh`. `-f` replaces an installation of the same version (of a link, only the link is deleted),
-`gotpm list` shows what is installed and `gotpm uninstall abntly -V <version>` removes it. `scripts/link.sh --check`,
-which the scripts and the tests use, accepts the link of `gotpm install -e -n preview`. Two differences from the
-scripts:
+`gotpm list` shows what is installed and `gotpm uninstall abntly -V <version>` removes it. Then
+`#import "@local/abntly:<version>": *` works before the version reaches Typst Universe. Two cautions:
 
-- gotpm does not rewrite the import of the template (`@preview/abntly:<version>`), as the `install` scripts do. A
-  `typst init @local/abntly:<version>` creates a work that only compiles with the version on Typst Universe or with
-  `gotpm install -n preview`;
+- the template imports `@preview/abntly:<version>`, and gotpm does not rewrite that import. A work created with
+  `typst init @local/abntly:<version>` compiles with the version on Typst Universe; to use the local copy, change
+  `@preview` to `@local` in it;
 - on Windows, `-e` (a symbolic link) needs Developer Mode or an administrator terminal; without them, use
   `gotpm install`, which copies.
-
-As an alternative, to have the local version without the working copy, the `install` scripts download the latest
-version tag from GitHub (the highest `v<version>`) and install the files it publishes on Typst Universe into Typst's
-local package directory, as `@local/abntly:<version>`:
-
-```sh
-sh scripts/install.sh                                          # macOS and Linux
-powershell -ExecutionPolicy Bypass -File scripts\install.ps1   # Windows
-```
-
-Then `#import "@local/abntly:<version>": *` and `typst init @local/abntly:<version> <folder>` work before the version
-reaches Typst Universe; in the installed copy, the template imports the package from `@local`, so that the work
-created from it compiles. The copy does not follow the changes in the repository (running the script again replaces
-it) and does not serve the tests or the examples, which import `@preview/abntly` and need `scripts/link.sh`. The
-scripts do not depend on the repository and also run straight from GitHub, in the terminal (macOS and Linux) or in
-PowerShell (Windows):
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.sh | sh
-irm https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.ps1 | iex
-```
 
 ## Folders
 
@@ -100,6 +84,13 @@ sh scripts/check.sh                                    # everything the CI runs
 tt run --font-path fonts --warnings promote            # only the Tytanic suite
 tt run --font-path fonts -e 'regex:^unit/'              # only the unit tests
 tt update --font-path fonts style/typography/section   # writes the reference of a case again
+```
+
+Run directly, `tt` needs the name `@preview/abntly:<version>` in the cases that compile the template and the
+examples. Link it first, in a temporary package directory of the terminal session, as the scripts do:
+
+```sh
+export TYPST_PACKAGE_PATH=$(mktemp -d) && gotpm install -e -n preview
 ```
 
 The cases are in `tests/<category>/.../test.typ`:
@@ -142,7 +133,8 @@ changes in `typst.toml`:
 
 1. change the version in the imports (`@preview/abntly:<version>`) of the template, the examples, the manual and
    the READMEs, and in the links of the READMEs;
-2. run `sh scripts/link.sh`, `sh scripts/manual.sh`, `sh scripts/readme.sh` and `sh scripts/thumbnail.sh`;
+2. run `gotpm install -e` (the `@local` of the new version), `sh scripts/manual.sh`, `sh scripts/readme.sh` and
+   `sh scripts/thumbnail.sh`;
 3. commit, then create and push the tag: `git tag v<version> && git push origin main v<version>`. The tag makes
    the links and the pictures of the READMEs work and starts [`release.yml`](.github/workflows/release.yml), which
    runs the tests, assembles the package with `scripts/package.sh` (it refuses a tag that differs from the version),
