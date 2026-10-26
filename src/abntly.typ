@@ -107,9 +107,9 @@
   show: citations.with(system: citation-system)
   // the acronyms, the symbols and the terms of the glossary written with keys (`list-of-acronyms((key: "abnt",
   // ...))`), cited in the text as `@abnt`, over the package glossarium: their entries registered at the start, so
-  // that the text cites those of a list that comes after it (the glossary)
+  // that the text cites those of a list that comes after it (the glossary), found in the body as it is written
   show: make-glossary
-  register-keyed()
+  register-keyed(body)
   // the entries of the summary (src/structure.typ)
   show: summary
   // the data, in the state and in the metadata of the PDF: the title, the author and the institution are known now;

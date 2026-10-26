@@ -641,9 +641,42 @@
 // start of the work: glossarium looks a key up where it is cited (`@typst`), and the glossary comes after the text
 // that cites it. Each list leaves its entries in a metadata; the main function registers them all before the body.
 #let keyed-entries = <abntly-keyed-entries>
-#let register-keyed() = context {
-  let entries = query(keyed-entries).map(m => m.value).flatten()
-  if entries.len() > 0 { register-glossary(entries) }
+
+// The entries of the lists as the body is written, before any layout: the main function receives the body with the
+// lists in it, so their metadata are found by walking it (its sequences, the content a `set` styles, the body of a
+// block), level by level: a `while` of Typst stops at 10 000 turns, and a work has more elements than that, but not
+// that many levels. A list the walk does not reach (inside a `context`) is left to the query.
+#let written-entries(body) = {
+  let found = ()
+  let level = (body,)
+  while level.len() > 0 {
+    let next = ()
+    for c in level {
+      if type(c) != content { continue }
+      if c.func() == metadata and c.has("label") and c.label == keyed-entries {
+        found += c.value
+        continue
+      }
+      if c.has("children") { next += c.children } else if c.has("child") { next.push(c.child) } else if (
+        c.has("body") and type(c.body) == content
+      ) { next.push(c.body) }
+    }
+    level = next
+  }
+  found
+}
+
+// The registration: the entries written in the body from the first pass, and a query for those it does not show,
+// which come a pass later. Registered from a query alone, every entry came a pass late, and the first mentions, which
+// change the text, one more: a long work did not converge within the five passes of Typst.
+#let register-keyed(body) = {
+  let written = written-entries(body)
+  if written.len() > 0 { register-glossary(written) }
+  let keys = written.map(e => e.key)
+  context {
+    let late = query(keyed-entries).map(m => m.value).flatten().filter(e => e.key not in keys)
+    if late.len() > 0 { register-glossary(late) }
+  }
 }
 
 // The labels that glossarium gives one entry with a key (`<abnt>`, `<abnt:short>`...), invisible and taking no room,

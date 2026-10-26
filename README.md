@@ -191,6 +191,7 @@ O abntly se inspirou nestes projetos:
 - Nomes em português para `auto-ref`, `errata` e `apud`: `remissao`, `retificacao` e `citacao-de-citacao`.
 - Corrigido o itálico de "[S. l.]", "[s. n.]" e "[s. d.]" nas referências.
 - Corrigido o link da sigla, do símbolo ou do termo citado pela chave, que agora leva à linha dele na lista.
+- Corrigida a convergência de um documento grande com siglas, símbolos ou termos citados pela chave.
 
 ### 0.1.0 (3 de outubro de 2026)
 

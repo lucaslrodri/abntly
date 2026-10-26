@@ -86,3 +86,16 @@
 #fails(() => list-of-acronyms("ABNT"), "list-of-acronyms: the entries are all pairs")
 #fails(() => glossary(("Typst", [sistema]), (key: "abnt", short: "ABNT")), "glossary: the entries are all pairs")
 #fails(() => glossary("Typst"), "glossary: the entries are all pairs")
+
+// the entries of the lists with keys, found in the body as it is written, so that they are registered from the first
+// pass: a list at the top, one after a `set` (inside the content it styles), one inside a block, the glossary; none
+// in a list of pairs
+#let entry(key) = (key: key, short: upper(key), long: [#key])
+#assert.eq(written-entries([#list-of-acronyms(entry("abnt"))]).map(e => e.key), ("abnt",))
+#assert.eq(written-entries[
+  #set text(fill: red)
+  #list-of-acronyms(entry("abnt"), entry("nbr"))
+  #block(list-of-symbols(entry("c")))
+  #glossary((key: "typst", short: "Typst", description: [sistema]))
+].map(e => e.key).sorted(), ("abnt", "c", "nbr", "typst"))
+#assert.eq(written-entries([#list-of-acronyms(("ABNT", [Associação Brasileira de Normas Técnicas]))]), ())

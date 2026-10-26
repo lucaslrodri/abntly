@@ -187,6 +187,7 @@ abntly was inspired by these projects:
 - Portuguese names for `auto-ref`, `errata` and `apud`: `remissao`, `retificacao` and `citacao-de-citacao`.
 - Fixed the italics of "[S. l.]", "[s. n.]" and "[s. d.]" in the references.
 - Fixed the link of an acronym, symbol or term cited by its key, which now leads to its own line of the list.
+- Fixed the convergence of a long work with acronyms, symbols or terms cited by their keys.
 
 ### 0.1.0 (3 October 2026)
 
