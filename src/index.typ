@@ -83,6 +83,8 @@
 /// )
 /// ```
 ///
+/// In Portuguese: `indice`.
+///
 /// - ..entries (dictionary, array): Entries of the index.
 /// - columns (int): Number of columns.
 /// - sort (bool): If `true`, sorts the entries alphabetically, by NBR 6033:1989. Use `false` to keep the order given,

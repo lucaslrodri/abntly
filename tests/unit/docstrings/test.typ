@@ -21,15 +21,28 @@
   tidy.show-module(docs, style: style, omit-private-definitions: false, show-outline: false)
 }
 
-// The functions with one name in both languages (`auto-ref`, `errata`, `apud`) have their help in Portuguese in
-// docs/manual/pt/extra.typ, which the manual in Portuguese shows: each one there has the parameters of the function
-// itself, with the same defaults.
-#let extra = tidy.parse-module(read("../../../docs/manual/pt/extra.typ"), name: "extra", old-syntax: true)
-#let signature(f) = f.args.pairs().map(((name, info)) => (name, info.at("default", default: none)))
-#assert.eq(extra.functions.map(f => f.name).sorted(), ("apud", "auto-ref", "errata"))
-#for stub in extra.functions {
-  let real = parsed.map(docs => docs.functions).flatten().find(f => f.name == stub.name)
-  assert(real != none, message: "docs/manual/pt/extra.typ: no function " + stub.name + " in src/")
-  assert.eq(signature(stub), signature(real), message: "docs/manual/pt/extra.typ: the parameters of " + stub.name
-    + " are not those of the function")
+// The description of each public definition ends with its name in the other language: "In Portuguese: `capa`." in
+// the modules in English, "Em inglês: `cover`." in src/aliases.typ (the manual shows it beside the name), and the
+// two name each other.
+#let public = dictionary(lib).keys()
+#let twin(definition, lead) = {
+  let found = definition.description.match(regex("(?:^|\n)[ \t]*" + lead + ": `([a-z-]+)`\\.\\s*$"))
+  if found != none { found.captures.first() }
+}
+#let twins = (:)
+#for docs in parsed {
+  let lead = if docs.name == "aliases" { "Em inglês" } else { "In Portuguese" }
+  for definition in docs.functions + docs.variables {
+    if definition.name not in public { continue }
+    let other = twin(definition, lead)
+    assert(other != none, message: definition.name + " (src/" + docs.name + ".typ): its description does not end with \""
+      + lead + ": `...`.\"")
+    twins.insert(definition.name, other)
+  }
+}
+#assert.eq(twins.keys().sorted(), public.sorted(), message: "every public definition is documented")
+#for (name, other) in twins {
+  assert(other in twins, message: name + ": " + repr(other) + " is not a public definition")
+  assert.eq(twins.at(other), name, message: name + " names " + other + ", and " + other + " names "
+    + twins.at(other))
 }

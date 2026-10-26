@@ -145,6 +145,8 @@
 /// #cover(top: with-info(d => [#upper(d.institution) \ #d.author]))
 /// ```
 ///
+/// In Portuguese: `capa`.
+///
 /// - top (auto, content): Content of the top part, in the place of the institution and the author.
 /// - middle (auto, content): Content of the middle part, in the place of the title and the version.
 /// - bottom (auto, content): Content of the bottom part, in the place of the location and the year.
@@ -195,6 +197,8 @@
 /// #title-page[Tese apresentada ao Programa de Pós-Graduação da Universidade do Brasil,
 ///   como requisito parcial para a obtenção do título de Doutor.]
 /// ```
+///
+/// In Portuguese: `folha-de-rosto`.
 ///
 /// - body (content): Text of the nature of the work: type of the work, aim and institution it is submitted to.
 /// - top (auto, content): Content of the top part, in the place of the author.
@@ -269,6 +273,8 @@
 ///   (title: [Profa. Dra.], name: [Beltrana de Tal], institution: [Universidade do Brasil]),
 /// )
 /// ```
+///
+/// In Portuguese: `folha-de-aprovacao`.
 ///
 /// - ..members (dictionary, content): Members of the board, in the format `signature` takes.
 /// - date (str, content, none): Date of the approval, as in "30 de setembro de 2026". With `none`, a blank line is
@@ -345,6 +351,8 @@
 /// The final card is usually issued by the library of the institution. To use it, give it in the `card` parameter:
 /// `catalog-card(card: image("card.pdf", width: 13.5cm))`.
 ///
+/// In Portuguese: `ficha-catalografica`.
+///
 /// - card (auto, content): Card issued by the library, in the place of the card created by the package.
 /// - draft (auto, bool): If `true`, shows the stamp "FICHA PROVISÓRIA" in the background of the page. With `auto`,
 ///   the stamp is shown on the card created by the package and left out on the card given in `card`. The stamp is never
@@ -419,6 +427,8 @@
 /// Creates the errata (NBR 14724:2024, section 4.2.1.2): the title "Errata", centred and without a number, followed
 /// by the content. The content is written by the author: the reference of the work and the table of the corrections.
 ///
+/// In Portuguese: `retificacao`.
+///
 /// - body (content): Reference of the work and table of the corrections.
 /// -> content
 #let errata(body) = {
@@ -430,6 +440,8 @@
 // of the page and in italic, as a decision of the package: an emphasis inside it (`_..._`) comes out upright.
 /// Creates the page of the dedication (NBR 14724:2024, section 4.2.1.4). The page has no title. The text is set in
 /// italics, centred, in the middle of the page.
+///
+/// In Portuguese: `dedicatoria`.
 ///
 /// - body (content): Text of the dedication.
 /// -> content
@@ -452,6 +464,8 @@
 /// Creates the acknowledgments (NBR 14724:2024, section 4.2.1.5): the title "Agradecimentos", centred and without a
 /// number, followed by the text.
 ///
+/// In Portuguese: `agradecimentos`.
+///
 /// - body (content): Text of the acknowledgments.
 /// -> content
 #let acknowledgments(body) = {
@@ -463,6 +477,8 @@
 // margin, at the foot of the page, as a decision of the package.
 /// Creates the page of the epigraph (NBR 14724:2024, section 4.2.1.6). The page has no title. The text is aligned to
 /// the right, at the bottom of the page. The line breaks and the italics are set by the author.
+///
+/// In Portuguese: `epigrafe`.
 ///
 /// - body (content): Text of the epigraph, with its source.
 /// -> content
@@ -496,6 +512,8 @@
 /// ]
 /// ```
 ///
+/// In Portuguese: `resumo`.
+///
 /// - body (content): Text of the abstract, with the keywords.
 /// - lang (auto, str): Language of the abstract, as in `"en"`, `"es"` or `"fr"`. With `auto`, it is the language of
 ///   the work.
@@ -525,6 +543,8 @@
 /// The keywords of the abstract in the language of the work are used as the subjects of the catalog card and written
 /// to the metadata of the PDF.
 ///
+/// In Portuguese: `palavras-chave`.
+///
 /// - ..words (str, content): Keywords, one in each argument.
 /// - sep (str, content): Separator between the keywords.
 /// - end (str, content): Punctuation after the last keyword.
@@ -548,6 +568,8 @@
 ///
 /// The standard recommends a list for each kind of illustration. The functions `list-of-figures`, `list-of-tables`
 /// and `list-of-frames` create the most common lists.
+///
+/// In Portuguese: `lista-de`.
 ///
 /// - target (str, function, selector): Kind of the figures to list (`image`, `table`, `"quadro"`, `raw` or the `kind`
 ///   of a kind of your own) or a selector.
@@ -582,15 +604,21 @@
 
 /// Creates the list of illustrations with the figures of the work. The same as `list-of(image)`.
 ///
+/// In Portuguese: `lista-de-figuras`.
+///
 /// -> content
 #let list-of-figures() = list-of(image)
 
 /// Creates the list of tables. The same as `list-of(table)`.
 ///
+/// In Portuguese: `lista-de-tabelas`.
+///
 /// -> content
 #let list-of-tables() = list-of(table)
 
 /// Creates the list of quadros. The same as `list-of("quadro")`.
+///
+/// In Portuguese: `lista-de-quadros`.
 ///
 /// -> content
 #let list-of-frames() = list-of("quadro")
@@ -653,6 +681,8 @@
 /// text by the key (`@abnt`), and the first mention shows the expression in full, followed by the acronym between
 /// parentheses: `(key: "abnt", short: "ABNT", long: [Associação Brasileira de Normas Técnicas])`.
 ///
+/// In Portuguese: `lista-de-siglas`.
+///
 /// - ..entries (array, dictionary): Acronyms, all as pairs or all as dictionaries.
 /// -> content
 #let list-of-acronyms(..entries) = entry-list("list-of-acronyms", entries.pos(), sort: true)
@@ -661,6 +691,8 @@
 /// symbols in the order given, each followed by its meaning.
 ///
 /// The entries are pairs, as in `($c$, [Velocidade da luz no vácuo])`, or dictionaries, as in `list-of-acronyms`.
+///
+/// In Portuguese: `lista-de-simbolos`.
 ///
 /// - ..entries (array, dictionary): Symbols, all as pairs or all as dictionaries.
 /// -> content
@@ -692,6 +724,8 @@
 /// - `keywords`: keywords of the abstract in the language of the work;
 /// - `pages`: number of pages, counted from the title page;
 /// - `data`: original dictionary of `config-info`.
+///
+/// In Portuguese: `com-dados`.
 ///
 /// - fn (function): Function that receives the data and returns the content.
 /// -> content
@@ -775,6 +809,8 @@
 ///
 /// By default, a page with the title "Apêndices" is put before the first appendix.
 ///
+/// In Portuguese: `apendice`.
+///
 /// - body (content): Rest of the work.
 /// - divider (bool): If `true`, puts the page "Apêndices" before the first appendix. The standard does not ask for
 ///   this page. Use `#show: appendix.with(divider: false)` to leave it out.
@@ -786,6 +822,8 @@
 /// numbered with its letter ("A.1").
 ///
 /// By default, a page with the title "Anexos" is put before the first annex.
+///
+/// In Portuguese: `anexo`.
 ///
 /// - body (content): Rest of the work.
 /// - divider (bool): If `true`, puts the page "Anexos" before the first annex. The standard does not ask for this
@@ -802,6 +840,8 @@
 /// The entries can be given in two ways. As pairs, the glossary is only printed:
 /// `("Typst", [sistema de composição tipográfica])`. As dictionaries, the terms can also be cited in the text by the
 /// key (`@typst`): `(key: "typst", short: "Typst", description: [sistema de composição tipográfica])`.
+///
+/// In Portuguese: `glossario`.
 ///
 /// - ..entries (array, dictionary): Terms and definitions, all as pairs or all as dictionaries.
 /// -> content

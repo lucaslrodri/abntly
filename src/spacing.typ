@@ -59,6 +59,8 @@
 /// Creates a paragraph without the indent of its first line: the text that goes on after a displayed equation, a long
 /// quote or a list, as in "where $x$ is…", which belongs to the paragraph before it.
 ///
+/// In Portuguese: `sem-recuo`.
+///
 /// - body (content): Text of the paragraph.
 /// -> content
 #let no-indent(body) = par(first-line-indent: 0pt, body)

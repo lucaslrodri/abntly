@@ -70,7 +70,7 @@ if $check; then
     [ -f "$tmp/$(basename "$picture")" ] || { echo "error: $picture has no example" >&2; stale=true; }
   done
   for lang in pt en; do
-    compile "docs/manual/$lang/manual.typ" "$tmp/manual-$lang.pdf"
+    compile "docs/manual/manual-$lang.typ" "$tmp/manual-$lang.pdf"
     if ! cmp -s "$tmp/manual-$lang.pdf" "docs/manual-$lang.pdf"; then
       if [ -n "${CI:-}" ]; then
         echo "warning: docs/manual-$lang.pdf differs from what the sources give here" >&2
@@ -88,7 +88,7 @@ if $check; then
   # norm joins two sections with "e" or "and", so those two are compared by their kind and by their sections
   marks() {
     typst eval --root . --font-path fonts --ignore-system-fonts 'query(<manual-mark>).map(it => it.value)' \
-      --in "docs/manual/$1/manual.typ" | awk '{ gsub(/\},\{/, "}\n{"); print }' |
+      --in "docs/manual/manual-$1.typ" | awk '{ gsub(/\},\{/, "}\n{"); print }' |
       sed -e '/"kind":"reference"/s/"value":.*/"value":"..."}/' -e 's/ and / e /g'
   }
   marks pt > "$tmp/marks-pt"
@@ -111,6 +111,6 @@ echo "$out/*.svg"
 
 mkdir -p "$tmp"
 for lang in pt en; do
-  compile "docs/manual/$lang/manual.typ" "docs/manual-$lang.pdf"
+  compile "docs/manual/manual-$lang.typ" "docs/manual-$lang.pdf"
   echo "docs/manual-$lang.pdf"
 done

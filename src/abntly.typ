@@ -26,6 +26,8 @@
 /// the citations and the list of references. Settings that are not parameters can be changed with `set` rules after
 /// the call. For example, `#set text(size: 11pt)` changes the font size, and every other size scales with it.
 ///
+/// In Portuguese: `trabalho-academico`.
+///
 /// - body (content): Content of the work.
 /// - info (dictionary): Data of the work, created with `config-info`. They are used on the cover, the title page, the
 ///   approval sheet and the catalog card, and written to the metadata of the PDF. Can be left out in a work without

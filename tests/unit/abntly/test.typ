@@ -6,10 +6,9 @@
 #import "../../../src/fonts.typ": elements, sizes, correction, script-size, families
 
 // --- what the package exports -----------------------------------------------------------------------------------------
-// 45 names in English and 42 in Portuguese (`auto-ref`, `errata` and `apud` are the same in both); every name is a function,
-// but the colour of the links
+// 45 names in English and 45 in Portuguese; every name is a function, but the colour of the links
 #let exported = dictionary(package)
-#assert.eq(exported.len(), 45 + 42)
+#assert.eq(exported.len(), 45 + 45)
 #for (name, value) in exported {
   if name in ("dark-indigo", "indigo-escuro") { assert.eq(type(value), color, message: name) } else {
     assert.eq(type(value), function, message: name)

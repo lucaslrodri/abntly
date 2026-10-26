@@ -85,12 +85,25 @@
     }))
 }
 
+// The name of a definition in the other language, in the pill the template gives (`show-alias` of the style), when
+// the template found it at the end of the help (the field `alias`); a function with its parentheses, as its heading.
+// The name is that of its reference in the other manual, less the prefix of the labels: `cover()`, `dark-indigo`.
+#let _alias(definition, style-args, call: false) = {
+  let shown = style-args.style.at("show-alias", default: none)
+  let name = definition.at("alias", default: none)
+  if shown != none and name != none { shown(name + if call { "()" } else { "" }) }
+}
+
 /// A function, in the parts the manual shows it in (a block each, so that its columns break between them): with no
-/// `part`, its name as a heading (for the cross-references and the index; without a number and out of the summary)
-/// and the signature; with `part: auto`, the description with its examples; with the name of a parameter, its box.
+/// `part`, its name as a heading (for the cross-references and the index; without a number and out of the summary),
+/// with its name in the other language at the right, and the signature; with `part: auto`, the description with its
+/// examples; with the name of a parameter, its box.
 #let show-function(fn, style-args, part: none) = plain(if part == none {
-  [#heading(level: style-args.first-heading-level + 1, numbering: none, outlined: false, bookmarked: true,
-    text(font: mono, fn.name + "()"))#if style-args.enable-cross-references { label(style-args.label-prefix + fn.name + "()") }]
+  // (sticky, as the heading alone is: a grid around it would leave it at the foot of a page)
+  block(sticky: true, grid(columns: (1fr, auto), column-gutter: 1em, align: (left + bottom, right + bottom),
+    [#heading(level: style-args.first-heading-level + 1, numbering: none, outlined: false, bookmarked: true,
+      text(font: mono, fn.name + "()"))#if style-args.enable-cross-references { label(style-args.label-prefix + fn.name + "()") }],
+    _alias(fn, style-args, call: true)))
   (style-args.style.show-parameter-list)(fn, style-args: style-args)
 } else if part == auto {
   tidy.utilities.eval-docstring(fn.description, style-args)
@@ -103,12 +116,12 @@
   )
 })
 
-/// A variable: its name and its type on a line, then the description.
+/// A variable: its name, its name in the other language and its type on a line, then the description.
 #let show-variable(var, style-args) = plain({
   grid(columns: (1fr, auto), align: (left + bottom, right + bottom),
     [#heading(level: style-args.first-heading-level + 1, numbering: none, outlined: false, bookmarked: true,
       text(font: mono, var.name))#if style-args.enable-cross-references { label(style-args.label-prefix + var.name) }],
-    if "type" in var { show-type(var.type, style-args: style-args) })
+    [#_alias(var, style-args)#if "type" in var { h(0.6em) + show-type(var.type, style-args: style-args) }])
   tidy.utilities.eval-docstring(var.description, style-args)
 })
 

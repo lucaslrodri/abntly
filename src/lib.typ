@@ -30,7 +30,7 @@
 // - src/citations.typ: the calls and the list of references (NBR 10520, NBR 6023) over Typst's `cite` and
 //   `bibliography` with the CSL of src/csl/; the citation of a citation (`apud`).
 // - src/aliases.typ: the name of each function in Portuguese, with its parameters and its help in Portuguese (the
-//   main function is `trabalho-academico`). `auto-ref`, `errata` and `apud` have the same name in both languages.
+//   main function is `trabalho-academico`).
 #import "abntly.typ": abntly
 #import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, ibge-table, preamble, algorithm,
   subfigures, part, sideways, stamp, signature)
@@ -45,7 +45,8 @@
 #import "citations.typ": apud
 // the Portuguese names, each a function with its parameters and its help in Portuguese (src/aliases.typ)
 #import "aliases.typ": (trabalho-academico, indigo-escuro, config-nomes, config-dados, pretextual, textual,
-  postextual, fonte, legenda, nota, chamada, quadro, ajustada, tabela-ibge, sem-recuo, preambulo, algoritmo,
-  subfiguras, parte, deitada, carimbo, assinatura, capa, folha-de-rosto, folha-de-aprovacao, ficha-catalografica,
-  dedicatoria, agradecimentos, epigrafe, resumo, palavras-chave, lista-de, lista-de-figuras, lista-de-tabelas,
-  lista-de-quadros, lista-de-siglas, lista-de-simbolos, apendice, anexo, glossario, indice, com-dados)
+  postextual, fonte, legenda, nota, chamada, remissao, quadro, ajustada, tabela-ibge, sem-recuo, preambulo,
+  algoritmo, subfiguras, parte, deitada, carimbo, assinatura, capa, folha-de-rosto, folha-de-aprovacao,
+  ficha-catalografica, retificacao, dedicatoria, agradecimentos, epigrafe, resumo, palavras-chave, lista-de,
+  lista-de-figuras, lista-de-tabelas, lista-de-quadros, lista-de-siglas, lista-de-simbolos, apendice, anexo,
+  glossario, indice, com-dados, citacao-de-citacao)

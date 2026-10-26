@@ -1,15 +1,12 @@
-// The manual of abntly: its template. The manual is a work set by the package itself (`project` applies `abntly`),
-// so it has the page, the fonts, the spacing and the elements of the works it describes, and the examples of the
-// elements of the text are evaluated where they stand, in the style of the package; only its body is smaller. It
-// has two versions, in Portuguese (`pt/`, which teaches the Portuguese names of the API) and in English (`en/`, the
-// English names), with the same chapters: `pt/prelude.typ` and `en/prelude.typ` give the language to the helpers
-// below.
-//
-// A chapter (`<lang>/chapters/NN-name.typ`) starts with `#import "../prelude.typ": *` and `#show: chapter.with(title:
-// [...], id: <label>)` and holds content only: no rule of the page, no absolute position, not even its own title,
-// which `chapter` sets. So the same files feed the PDF (`<lang>/manual.typ` includes them) and, later, a page each
-// of a site (shiroa): `chapter` and the helpers are the only places that would look at the target. The helpers have
-// English names that are not names of the package (`nota`, `index` and `frame` are); the package is not imported
+// The manual of abntly: its template. The manual is a work set by the package itself (`project` applies `abntly`), so
+// it has the page, the fonts, the spacing and the elements of the works it describes, and the examples of the elements
+// of the text are evaluated where they stand, in the style of the package; only its body is smaller. It has two
+// versions, each in one file: `manual-pt.typ`, in Portuguese, which teaches the Portuguese names of the API, and
+// `manual-en.typ`, in English, with the English names. They have the same chapters in the same order, a chapter being a
+// primary heading with its label (`= Início rápido <quick-start>`), and each starts by giving its language to the
+// helpers below (`.with(lang: lang)`). One file, and not a file per chapter: an editor that compiles the file it shows
+// (Tinymist) then compiles the whole manual, with its numbered headings and the labels of every chapter. The helpers
+// have English names that are not names of the package (`nota`, `index` and `frame` are); the package is not imported
 // with `*`, and the examples get it through the scope of `eval`.
 //
 // The helpers:
@@ -17,6 +14,8 @@
 // - `remark[...]`: a remark;
 // - `pill(kind)`: "Obrigatório", "Opcional", "Recomendado" (the norm), "Atendido", "Atendido em parte", "Não
 //   implementado", "Decisão de projeto" (the package), by a key that is the same in both languages;
+// - `alias-pill(name)`: the name of a definition in the other language, beside its name in the reference, a link to
+//   it in the manual in the other language;
 // - a block of code: set by the package codly, with its lines numbered;
 // - ```` ```example ````: Typst code shown and evaluated, the result under the code, at the width of the text block
 //   of a work, so that its lines break as the author will see them;
@@ -55,6 +54,7 @@
     parameters: "Parâmetros", default: "Padrão", variables: "Variáveis", page: "p.",
     required: "Obrigatório", optional: "Opcional", recommended: "Recomendado", implemented: "Atendido",
     partial: "Atendido em parte", missing: "Não implementado", decision: "Decisão de projeto",
+    alias: "Em inglês",
   ),
   en: (
     norm: "What the standard asks for", remark: "Remark", result: "Result", argument: "Argument",
@@ -62,6 +62,7 @@
     parameters: "Parameters", default: "Default", variables: "Variables", page: "p.",
     required: "Required", optional: "Optional", recommended: "Recommended", implemented: "Implemented",
     partial: "Partly implemented", missing: "Not implemented", decision: "Design decision",
+    alias: "In Portuguese",
   ),
 )
 
@@ -74,19 +75,39 @@
   required: rgb("#b42318"), optional: rgb("#475467"), recommended: rgb("#026aa2"),
   implemented: rgb("#067647"), partial: rgb("#b54708"), missing: rgb("#344054"), decision: accent,
 )
+// and of the name in the other language
+#let alias-color = rgb("#6941c6")
+
+// the rounded box of a pill, with its text in the colour of its border
+#let _pill-box(color, body) = box(fill: color.lighten(88%), stroke: 0.5pt + color.lighten(40%), radius: 1em,
+  inset: (x: 0.6em), outset: (y: 0.3em), api.boxed(text(font: api.sans, size: 0.72em, weight: "bold", fill: color,
+    body)))
 
 /// A pill: the status of an element in the norm (`"required"`, `"optional"`, `"recommended"`) or in the package
 /// (`"implemented"`, `"partial"`, `"missing"`, `"decision"`).
 #let pill(kind, lang: "pt") = {
   assert(kind in pill-colors, message: "pill: unknown kind " + repr(kind))
-  let color = pill-colors.at(kind)
   mark("pill", kind)
-  box(fill: color.lighten(88%), stroke: 0.5pt + color.lighten(40%), radius: 1em, inset: (x: 0.6em),
-    outset: (y: 0.3em), api.boxed(text(font: api.sans, size: 0.72em, weight: "bold", fill: color,
-      words.at(lang).at(kind))))
+  _pill-box(pill-colors.at(kind), words.at(lang).at(kind))
   // a letter of no width after it: alone in a cell of a table, the pill stands on the line of a text, with the
   // height of that line, and not in the middle of the cell, where it would reach the rule above it
   sym.zws
+}
+
+// The manual in the other language, at the tag of this version, as the READMEs reach the PDFs: jsDelivr serves it as
+// a PDF, which the browser opens at a named destination (`#nameddest=`), where GitHub would download it or show it
+// in a viewer of its own. A link works once the tag is pushed.
+#let _other-manual(lang) = ("https://cdn.jsdelivr.net/gh/" + package.repository.trim("https://github.com/", at: start)
+  + "@v" + package.version + "/docs/manual-" + (if lang == "pt" { "en" } else { "pt" }) + ".pdf")
+
+/// The pill of the name of a definition in the other language of the package, as its help ends with it: "Em inglês"
+/// and `cover()` in the manual in Portuguese, "In Portuguese" and `capa()` in the manual in English. It is a link to
+/// that definition in the other manual: the name is its label there, less the prefix `api-`, and Typst gives every
+/// labelled heading a named destination.
+#let alias-pill(name, lang: "pt") = {
+  mark("pill", "alias")
+  link(_other-manual(lang) + "#nameddest=api-" + name,
+    _pill-box(alias-color, [#words.at(lang).alias#h(0.45em)#text(font: api.mono, weight: "regular", name)]))
 }
 
 // a box with a coloured bar at its left, a heading line and a body in the reduced size, single-spaced
@@ -147,7 +168,7 @@
 }
 
 // The counters of the manual itself, which an example leaves as it found them: its tables (`data-table`) and its
-// headings (`chapter` counts them). They are counted apart, only by steps: an example that read the counters of the
+// headings (`project` counts them). They are counted apart, only by steps: an example that read the counters of the
 // figures and of the headings to put them back would depend on the example before it, and so on up the manual,
 // which the compiler does not follow beyond five steps.
 #let _tables = counter("manual-table")
@@ -272,26 +293,34 @@
 
 // ---------- the reference of the API ----------
 // The documented definitions of each language, parsed once, in one module: in Portuguese, the names of
-// src/aliases.typ and the two functions with one name in both languages (`pt/extra.typ` has their help in
-// Portuguese); in English, the modules of src/. tidy reads the syntax of the comments the editor reads too
-// (`/// - name (type): ...`).
+// src/aliases.typ; in English, the modules of src/. tidy reads the syntax of the comments the editor reads too
+// (`/// - name (type): ...`). The help of each definition ends with its name in the other language ("Em inglês:
+// `cover`.", "In Portuguese: `capa`."; tests/unit/docstrings checks it): the name goes to a field `alias`, which the
+// reference shows in a pill beside the name of the definition, and the line leaves the description.
+#let _alias-line = regex("(?m)^[ \t]*(?:Em inglês|In Portuguese): `([a-z-]+)`\\.[ \t]*$")
+#let _with-alias(definition) = {
+  let found = definition.description.match(_alias-line)
+  if found == none { return definition }
+  definition + (alias: found.captures.first(), description: definition.description.replace(_alias-line, "").trim())
+}
 #let _parse(lang, sources) = {
   let docs = tidy.parse-module(sources.join("\n"), name: "abntly", label-prefix: "api-", scope: example-scope,
     old-syntax: true)
   // only what the package exports
   let public = dictionary(package-lib).keys()
-  docs.functions = docs.functions.filter(f => f.name in public)
-  docs.variables = docs.variables.filter(v => v.name in public)
+  docs.functions = docs.functions.filter(f => f.name in public).map(_with-alias)
+  docs.variables = docs.variables.filter(v => v.name in public).map(_with-alias)
   docs
 }
 #let modules = (
-  pt: _parse("pt", (read("../../src/aliases.typ"), read("pt/extra.typ"))),
+  pt: _parse("pt", (read("../../src/aliases.typ"),)),
   en: _parse("en", ("abntly", "info", "words", "layout", "spacing", "elements", "structure", "index", "citations")
     .map(name => read("../../src/" + name + ".typ"))),
 )
 
 #let _api-style(lang) = api.style + (
   show-example: tidy.show-example.show-example.with(layout: example-layout.with(lang: lang)),
+  show-alias: alias-pill.with(lang: lang),
 )
 
 /// The reference of the given definitions, in the given order, shown where the chapter introduces them: the
@@ -341,26 +370,7 @@
   })))
 }
 
-// ---------- shells ----------
-/// The first line of every chapter, with its title and its label: the title, then the chapter, with the frames of
-/// the code and the examples evaluated where they stand.
-#let chapter(body, title: none, id: none, lang: "pt") = {
-  // code: by the package codly, with its lines numbered; the frame and the examples are rules after codly's, so
-  // that they take the `raw` first
-  show: codly-init.with()
-  codly(display-name: false, display-icon: false, languages: (:), fill: luma(250), zebra-fill: luma(243),
-    stroke: none, radius: 0pt, inset: (x: 0.6em, y: 0.28em), smart-indent: true, breakable: true,
-    number-format: n => text(fill: luma(140), size: 0.85em, str(n)))
-  show: _code-rules.with(lang)
-  // the headings of the manual, counted apart for the examples (`_headings`)
-  show heading: it => {
-    if it.numbering != none { _headings.step(level: it.level) }
-    it
-  }
-  [#heading(level: 1, title)#id]
-  body
-}
-
+// ---------- the shell ----------
 // The summary of the first page: the chapters and their sections, each a link, with its page, in two columns of
 // the same number of entries; compact, where the summary of a work (`outline`, as the package sets it) would take a
 // page of its own.
@@ -385,7 +395,8 @@
 
 /// The shell of the PDF: the work the package sets, with a smaller body; on its first page, what identifies the
 /// package (its name, what it is for, the version and its date, the repository, the author), then the presentation,
-/// centred, without a title of its own, and the summary; then the chapters.
+/// centred, without a title of its own, and the summary; then the chapters, with the frames of the code and the
+/// examples evaluated where they stand.
 #let project(title: "", subtitle: none, author: "", date: none, abstract: none, lang: "pt", body) = {
   show: package-lib.abntly.with(lang: lang, info: package-lib.config-info(title: title, subtitle: subtitle,
     author: author))
@@ -405,5 +416,17 @@
   v(3em, weak: true)
   block(above: 1.6em, below: 0.9em, text(font: api.sans, size: 1.3em, weight: "bold", words.at(lang).contents))
   _contents(lang)
+  // code: by the package codly, with its lines numbered; the frame and the examples are rules after codly's, so
+  // that they take the `raw` first
+  show: codly-init.with()
+  codly(display-name: false, display-icon: false, languages: (:), fill: luma(250), zebra-fill: luma(243),
+    stroke: none, radius: 0pt, inset: (x: 0.6em, y: 0.28em), smart-indent: true, breakable: true,
+    number-format: n => text(fill: luma(140), size: 0.85em, str(n)))
+  show: _code-rules.with(lang)
+  // the headings of the manual, counted apart for the examples (`_headings`)
+  show heading: it => {
+    if it.numbering != none { _headings.step(level: it.level) }
+    it
+  }
   body
 }

@@ -80,6 +80,8 @@
 /// page, the approval sheet and the catalog card. Fields that are not given are left out of those pages; the title
 /// and the author are required by them.
 ///
+/// In Portuguese: `config-dados`.
+///
 /// - title (str, content): Title of the work.
 /// - subtitle (str, content, none): Subtitle. It is printed after the title, separated by a colon.
 /// - author (str, content, dictionary): Author. It can be the full name or a dictionary with the given name and the

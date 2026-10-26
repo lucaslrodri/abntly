@@ -30,6 +30,8 @@
 // the package with `*`.
 /// Default colour of the links: a dark indigo (`#372aac`). It is the default value of the `hyperlink` parameter of
 /// `abntly`.
+///
+/// In Portuguese: `indigo-escuro`.
 #let dark-indigo = oklch(39.8%, 0.195, 277.366deg)
 
 /// Starts the pre-textual part: the headings after it take no number. It must be used with a `show` rule:
@@ -38,6 +40,8 @@
 /// The start of the work is already pre-textual, and the pre-textual elements of the package (abstract, lists,
 /// summary) already have unnumbered titles. Use this function only if the work writes pre-textual titles as plain
 /// headings, as in `= Presentation`.
+///
+/// In Portuguese: `pretextual`.
 ///
 /// - body (content): Rest of the work.
 /// -> content
@@ -54,6 +58,8 @@
 /// Without this function, the textual part starts at the first numbered primary section. Use it when the text starts
 /// without a numbered heading.
 ///
+/// In Portuguese: `textual`.
+///
 /// - body (content): Rest of the work.
 /// -> content
 #let main-matter(body) = {
@@ -69,6 +75,8 @@
 /// The post-textual elements of the package (references, glossary, appendices, annexes and index) already have their
 /// titles in the right form, and the list of references marks the start of this part for the summary. Use this
 /// function only if the work writes post-textual titles as plain headings, as in `= References`.
+///
+/// In Portuguese: `postextual`.
 ///
 /// - body (content): Rest of the work.
 /// -> content

@@ -4,7 +4,7 @@
 #folha-de-rosto[Tese apresentada ao Programa de Pós-Graduação da Universidade do Brasil, como requisito
   parcial para a obtenção do título de Doutor.]
 // --- example ---
-#errata[
+#retificacao[
   AUTOR, Nome do. *Título do trabalho*: subtítulo. 2026. 120 f. Tese (Doutorado) --
   Universidade do Brasil, Rio Branco, 2026.
 

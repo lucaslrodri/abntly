@@ -2,4 +2,4 @@
 // Compile-only: the manual must build, that is, every chapter, every example evaluated in it, the reference tidy
 // generates from the `///` comments of src/ and the pictures of the page examples (`sh scripts/manual.sh` renders
 // them; they are committed).
-#include "/docs/manual/pt/manual.typ"
+#include "/docs/manual/manual-pt.typ"

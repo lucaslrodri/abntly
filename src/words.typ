@@ -21,6 +21,8 @@
 /// continues, continuation, conclusion, contents, references. The names used by `auto-ref` can be replaced too:
 /// section, subsection, subsubsection, appendix-name, annex-name, equation, page.
 ///
+/// In Portuguese: `config-nomes`.
+///
 /// - ..args (arguments): Terms to replace, by key. They accept text or content.
 /// -> dictionary
 #let config-names(..args) = {

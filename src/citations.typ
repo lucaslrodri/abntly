@@ -150,6 +150,8 @@
 ///
 /// In the numeric citation systems, the source consulted is given by its number, as in "(Cagliari, 1986 apud 5)".
 ///
+/// In Portuguese: `citacao-de-citacao`.
+///
 /// - author (str, content): Author of the original work, as it is written in the call: the surname, or the first
 ///   word of the title.
 /// - date (int, str, content): Date of the original work.

@@ -57,7 +57,7 @@ irm https://raw.githubusercontent.com/lucaslrodri/abntly/main/scripts/install.ps
 | [`src/`](src/) | o pacote; `src/lib.typ` é o ponto de entrada |
 | [`template/`](template/) | o modelo de um trabalho novo |
 | [`examples/`](examples/) | o exemplo básico e o exemplo completo, em português e em inglês |
-| [`docs/manual/`](docs/manual/) | as fontes dos manuais, em português (`pt/`) e em inglês (`en/`), e os pequenos trabalhos dos seus exemplos |
+| [`docs/manual/`](docs/manual/) | as fontes dos manuais, em português (`manual-pt.typ`) e em inglês (`manual-en.typ`), e os pequenos trabalhos dos seus exemplos |
 | [`docs/readme/`](docs/readme/) | as imagens dos READMEs |
 | [`tests/`](tests/) | a suíte de testes |
 | [`scripts/`](scripts/) | os scripts de instalação, de geração e de verificação |

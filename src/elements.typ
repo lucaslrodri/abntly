@@ -274,6 +274,8 @@
 /// be called inside the figure, after the illustration. Without an argument, it says that the illustration was made
 /// by the author: "Fonte: Elaboração própria.".
 ///
+/// In Portuguese: `fonte`.
+///
 /// - ..body (content): Source consulted, with the final period.
 /// -> content
 #let source(..body) = {
@@ -284,6 +286,8 @@
 
 /// Creates the legend line of an illustration: "Legenda: …" (NBR 14724:2024, section 5.8). It must be called inside
 /// the figure, after the source.
+///
+/// In Portuguese: `legenda`.
 ///
 /// - body (content): Text of the legend.
 /// -> content
@@ -296,6 +300,8 @@
 ///
 /// With the `call` parameter, it creates a specific note of a table, identified by a superscript number in the place
 /// of the word "Nota". The matching call is put in the cell of the table with the function `call`.
+///
+/// In Portuguese: `nota`.
 ///
 /// - body (content): Text of the note.
 /// - word (auto, content): Word shown before the colon. The default is "Nota", in the language of the text. Example:
@@ -312,6 +318,8 @@
 // with that call after it (a `context` for each call, which looks for it).
 /// Creates the call of a specific note in a cell of a table: a superscript number, as in "São Paulo¹". The number is
 /// a link to the note created with `note(call: 1)` under the same table.
+///
+/// In Portuguese: `chamada`.
 ///
 /// - n (int, str): Number of the call.
 /// -> content
@@ -354,6 +362,8 @@
 /// A semicolon right after the call ends the expression in markup and is not printed. Write it as
 /// `#auto-ref(<fig>)\;`.
 ///
+/// In Portuguese: `remissao`.
+///
 /// - target (label): Label of the element.
 /// - form (str): Form of the reference: `"normal"`, for the name and the number, or `"page"`, for the page.
 /// -> content
@@ -367,6 +377,8 @@
 /// lines of 0.4 pt on every cell, and its text keeps the size of the body.
 ///
 /// The function takes the same arguments as `figure`. For numerical data, use a table, with `fitted`.
+///
+/// In Portuguese: `quadro`.
 ///
 /// - ..args (arguments): Arguments of `figure`: the content and `caption`, among others.
 /// -> content
@@ -388,6 +400,8 @@
 /// standards of the IBGE (NBR 14724:2024, section 5.9): it takes the horizontal rules automatically and, if it takes
 /// more than one page, it repeats the header and the title with the marks "(continua)", "(continuação)" and
 /// "(conclusão)". A table without a header and a quadro keep the lines set by the author.
+///
+/// In Portuguese: `ajustada`.
 ///
 /// - ..args (arguments): Arguments of `figure`: the content, `caption`, `kind` and `supplement`, among others.
 /// - width (auto, length, ratio): Width of the set. With `auto`, it is the measured width of the illustration. Give a
@@ -436,6 +450,8 @@
 /// For a table whose title, source and notes stay within the width of the table itself, or that goes on over pages
 /// with its header and "(continua)", use `fitted`, where a table with a header takes this form by itself.
 ///
+/// In Portuguese: `tabela-ibge`.
+///
 /// - ..args (arguments): Arguments of `table`: `columns`, `align`, the header in `table.header(...)` and the cells,
 ///   among others. A `stroke` is ignored: the rules are those of the IBGE.
 /// -> content
@@ -452,6 +468,8 @@
 /// `source`. The code takes the width of the text block, and a long algorithm goes on on the next page.
 ///
 /// A `figure` whose content is a block of code is treated as an algorithm too, with the same numbering.
+///
+/// In Portuguese: `algoritmo`.
 ///
 /// - ..args (arguments): Arguments of `figure`: the content and `caption`, among others.
 /// -> content
@@ -477,6 +495,8 @@
 /// Each part is a `figure`, followed by its label. The source of a part goes inside its figure. The last positional
 /// argument can be content with the source, the legend and the notes of the set. This function cannot be used inside
 /// `fitted`.
+///
+/// In Portuguese: `subfiguras`.
 ///
 /// - ..args (arguments): Parts (`figure(...)`, each followed by its label) and, last, the content that goes under the
 ///   set (`source`, `legend`, `note`).
@@ -544,6 +564,8 @@
 /// no number, and shows "Parte I" and the title, centred. The primary section after it starts on a new page, and the
 /// numbering of the sections goes on from one part to the next. The ABNT standards say nothing about this element.
 ///
+/// In Portuguese: `parte`.
+///
 /// - title (content): Title of the part.
 /// -> content
 #let part(title) = [#metadata(none)<abntly-part-start>] + page(numbering: none, header: none, footer: none, {
@@ -565,6 +587,8 @@
 /// upright, with the same margins, and the top of the content faces the binding side. The text goes on on the next
 /// page. The ABNT standards say nothing about this element.
 ///
+/// In Portuguese: `deitada`.
+///
 /// - body (content): Content to turn: a figure or a table in `fitted`, for example.
 /// -> content
 #let sideways(body) = page(align(left + horizon, rotate(-90deg, reflow: true, body)))
@@ -577,6 +601,8 @@
 ///
 /// The stamp is used in the `background` parameter of the page. Use `#set page(background: stamp[DRAFT])` to apply it
 /// to every page from there on, or `#page(background: stamp[DRAFT])[...]` for a single page.
+///
+/// In Portuguese: `carimbo`.
 ///
 /// - body (content): Text of the stamp.
 /// - note (none, content): Smaller text, shown under the main text.
@@ -614,6 +640,8 @@
 /// section 5.2).
 ///
 /// The title page and the approval sheet already include this block. Use this function only in pages built by hand.
+///
+/// In Portuguese: `preambulo`.
 ///
 /// - body (content): Text of the nature of the work.
 /// -> content
@@ -667,6 +695,8 @@
 /// The function `approval-page` already creates the signatures. Use this function in pages built by hand. The
 /// signatures of one call stand one under the other; to put them side by side, use a `grid` with one call in each
 /// cell.
+///
+/// In Portuguese: `assinatura`.
 ///
 /// - ..members (dictionary, content): Members of the board, one in each argument. Each member is a dictionary with
 ///   the keys `name`, `title` and `institution` (required) and `role` (optional). It also takes content, with the text

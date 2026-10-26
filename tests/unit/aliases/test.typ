@@ -1,7 +1,7 @@
 /// Synopsis: Os nomes em português (src/aliases.typ): cada função devolve o mesmo que a função em inglês, e recusa em português
 #import "../common.typ": *
 #import "../../../src/lib.typ": *
-#import "../../../src/aliases.typ": translated, positional, number-modes
+#import "../../../src/aliases.typ": translated, positional, number-modes, reference-forms, citation-forms
 
 // a function in Portuguese gives what the English one gives with the same arguments
 #let same(pt, en) = assert.eq(pt, en)
@@ -11,6 +11,8 @@
 #assert.eq(translated(number-modes, "linha", "campo"), "line")
 #fails(() => translated(number-modes, "label", "trabalho-academico: modo"),
   "trabalho-academico: modo deve ser \"rotulo\" ou \"linha\"; recebido: \"label\"")
+#assert.eq(reference-forms, (normal: "normal", pagina: "page"))
+#assert.eq(citation-forms, (normal: "normal", frase: "prose"))
 #let collect(..args) = positional(args, "funcao", "as entradas")
 #assert.eq(collect(1, 2), none)
 #fails(() => collect(1, nome: 2), "funcao: recebe as entradas; recebido: (nome: 2)")
@@ -54,6 +56,8 @@
 #fails(() => assinatura(membro: member), "assinatura: recebe os membros da banca")
 
 #same(chamada(1), call(1))
+#same(remissao(<x>), auto-ref(<x>))
+#same(remissao(<x>, forma: "pagina"), auto-ref(<x>, form: "page"))
 // (the box of a `fitted` measures inside a function of the layout, which is never equal to another: by what they
 // are written as)
 #same(repr(ajustada(largura: 5cm, rotulo: <a>, caption: [F], rect())),
@@ -76,6 +80,7 @@
   approval-page(member, date: [1º de outubro], top: [T], middle: [M], bottom: [P], middle-height: 83%, draft: false))
 #same(ficha-catalografica(ficha: [F], provisoria: false), catalog-card(card: [F], draft: false))
 #same(ficha-catalografica(), catalog-card())
+#same(retificacao[corpo], errata[corpo])
 #same(dedicatoria[corpo], dedication[corpo])
 #same(agradecimentos[corpo], acknowledgments[corpo])
 #same(epigrafe[corpo], epigraph[corpo])
@@ -94,6 +99,15 @@
 #same(indice(("Termo", 1), colunas: 1, ordenar: false), index(("Termo", 1), columns: 1, sort: false))
 #let reads = d => d.title
 #same(com-dados(reads), with-info(reads))
+
+// --- the citations ----------------------------------------------------------------------------------------------------
+// (the source consulted is a `context`, and two of them are equal whatever their key and their page: by the text
+// around it, the original work and the form; the manual in Portuguese shows the whole call)
+#same(text-of(citacao-de-citacao([Cagliari], 1986, <k>)), text-of(apud([Cagliari], 1986, <k>)))
+#same(text-of(citacao-de-citacao([Cagliari], 1986, <k>, pagina: [p. 104], complemento: [p. 55], forma: "frase")),
+  text-of(apud([Cagliari], 1986, <k>, page: [p. 104], supplement: [p. 55], form: "prose")))
+#assert.eq(text-of(citacao-de-citacao([Cagliari], 1986, <k>, pagina: [p. 104], forma: "frase")),
+  "Cagliari (1986, p. 104 apud )")
 // a named argument a collector would swallow is refused in Portuguese
 #fails(() => folha-de-aprovacao(membro: member), "folha-de-aprovacao: recebe os membros da banca")
 #fails(() => palavras-chave("a", sep: ","), "palavras-chave: recebe as palavras, e separador, fim e rotulo")
@@ -101,6 +115,11 @@
 #fails(() => lista-de-simbolos(simbolo: "a"), "lista-de-simbolos: recebe os símbolos")
 #fails(() => glossario(termo: "a"), "glossario: recebe os termos")
 #fails(() => indice(("Termo", 1), columns: 1), "indice: recebe as entradas, e colunas e ordenar")
+// a value in English is refused in Portuguese, and so is a key that is not a label
+#fails(() => remissao(<x>, forma: "page"), "remissao: forma deve ser \"normal\" ou \"pagina\"; recebido: \"page\"")
+#fails(() => citacao-de-citacao([C], 1986, <k>, forma: "prose"),
+  "citacao-de-citacao: forma deve ser \"normal\" ou \"frase\"; recebido: \"prose\"")
+#fails(() => citacao-de-citacao([C], 1986, "k"), "citacao-de-citacao: a fonte consultada é uma chave do .bib")
 // and the English function refuses its own, in English
 #fails(() => capa(altura-do-meio: 3), "cover: middle-height is a ratio or a length")
 #fails(() => apendice(divisoria: 1)[corpo], "appendix: divider is true or false")

@@ -2,21 +2,23 @@
 // here is a function of its own, with its parameters and its help (the `///` comments, which the editor shows) in
 // Portuguese, that only calls the English one. The values with a name are translated too
 // (`modo-de-numeracao-das-equacoes: "rotulo"`), and an argument a collector would swallow is refused in Portuguese.
-// Three functions have the same name in both languages and no alias: `auto-ref`, `errata` and `apud`. The keys the
-// functions read from the author's dictionaries are accepted in Portuguese by the English functions themselves (the
-// entries of the index, the members of the board, the people of the work); the data `com-dados` gives keep their
-// English keys.
+// The keys the functions read from the author's dictionaries are accepted in Portuguese by the English functions
+// themselves (the entries of the index, the members of the board, the people of the work); the data `com-dados`
+// gives keep their English keys. The help of each definition ends with its name in the other language ("Em inglês:
+// `cover`.", and "In Portuguese: `capa`." in the English one), which the manual shows beside its name and the case
+// tests/unit/docstrings checks in both directions.
 #import "abntly.typ": abntly
-#import "elements.typ": (source, legend, note, call, frame, fitted, ibge-table, preamble, algorithm, subfigures, part,
-  sideways, stamp, signature)
+#import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, ibge-table, preamble, algorithm,
+  subfigures, part, sideways, stamp, signature)
 #import "spacing.typ": no-indent
 #import "layout.typ": front-matter, main-matter, back-matter, dark-indigo
 #import "words.typ": config-names
 #import "info.typ": config-info
-#import "structure.typ": (cover, title-page, approval-page, catalog-card, dedication, acknowledgments, epigraph,
-  abstract, keywords, list-of, list-of-figures, list-of-tables, list-of-frames, list-of-acronyms, list-of-symbols,
-  appendix, annex, glossary, with-info)
+#import "structure.typ": (cover, title-page, approval-page, catalog-card, errata, dedication, acknowledgments,
+  epigraph, abstract, keywords, list-of, list-of-figures, list-of-tables, list-of-frames, list-of-acronyms,
+  list-of-symbols, appendix, annex, glossary, with-info)
 #import "index.typ": index
+#import "citations.typ": apud
 
 // a value written in Portuguese, as the English function takes it; another one is refused in Portuguese
 #let translated(values, value, field) = {
@@ -32,21 +34,27 @@
 
 // the values of `modo-de-numeracao-das-equacoes`
 #let number-modes = (rotulo: "label", linha: "line")
+// the values of `forma`, in `remissao` and in `citacao-de-citacao`
+#let reference-forms = (normal: "normal", pagina: "page")
+#let citation-forms = (normal: "normal", frase: "prose")
 
 /// Cor padrão dos links: um índigo escuro (`#372aac`). É o valor padrão do parâmetro `hiperlink` de
 /// `trabalho-academico`.
+///
+/// Em inglês: `dark-indigo`.
 #let indigo-escuro = dark-indigo
 
 // --- the main function ----------------------------------------------------------------------------------------------
 
 /// Aplica a formatação da ABNT a todo o documento. Deve ser usada com uma regra `show` no início do arquivo:
-/// `#show: trabalho-academico.with(dados: config-dados(...))`. É equivalente à função `abntly`, com os parâmetros em
-/// português.
+/// `#show: trabalho-academico.with(dados: config-dados(...))`.
 ///
 /// A função configura a página, as margens, as fontes, os espaçamentos, a apresentação dos elementos do texto, as
 /// citações e a lista de referências. Configurações que não são parâmetros podem ser alteradas com regras `set` após
 /// a chamada. Por exemplo, `#set text(size: 11pt)` altera o tamanho da fonte, e os demais tamanhos se ajustam
 /// proporcionalmente.
+///
+/// Em inglês: `abntly`.
 ///
 /// - corpo (content): Conteúdo do trabalho.
 /// - dados (dictionary): Dados do trabalho, criados com `config-dados`. São usados na capa, na folha de rosto, na
@@ -107,6 +115,8 @@
 /// own-work, continues, continuation, conclusion, contents, references. Os nomes usados por `auto-ref` também podem
 /// ser substituídos: section, subsection, subsubsection, appendix-name, annex-name, equation, page.
 ///
+/// Em inglês: `config-names`.
+///
 /// - ..palavras (arguments): Termos a substituir, identificados pela chave. Aceitam texto ou conteúdo.
 /// -> dictionary
 #let config-nomes(..palavras) = config-names(..palavras)
@@ -114,6 +124,8 @@
 /// Define os dados do trabalho, para o parâmetro `dados` de `trabalho-academico`. Esses dados são usados na capa, na
 /// folha de rosto, na folha de aprovação e na ficha catalográfica. Campos não informados são omitidos dessas páginas;
 /// o título e o autor são obrigatórios para elas.
+///
+/// Em inglês: `config-info`.
 ///
 /// - titulo (str, content): Título do trabalho.
 /// - subtitulo (str, content, none): Subtítulo. É impresso após o título, separado por dois-pontos.
@@ -157,6 +169,8 @@
 /// títulos sem número. Use esta função apenas se o trabalho escrever títulos pré-textuais como títulos comuns, como
 /// em `= Apresentação`.
 ///
+/// Em inglês: `front-matter`.
+///
 /// - corpo (content): Restante do trabalho.
 /// -> content
 #let pretextual(corpo) = front-matter(corpo)
@@ -167,6 +181,8 @@
 ///
 /// Sem esta função, a parte textual começa na primeira seção primária numerada. Use-a quando o texto começar sem um
 /// título numerado.
+///
+/// Em inglês: `main-matter`.
 ///
 /// - corpo (content): Restante do trabalho.
 /// -> content
@@ -179,6 +195,8 @@
 /// formato correto, e a lista de referências marca o início dessa parte para o sumário. Use esta função apenas se o
 /// trabalho escrever títulos pós-textuais como títulos comuns, como em `= Referências`.
 ///
+/// Em inglês: `back-matter`.
+///
 /// - corpo (content): Restante do trabalho.
 /// -> content
 #let postextual(corpo) = back-matter(corpo)
@@ -189,12 +207,16 @@
 /// chamada dentro da figura, depois da ilustração. Sem argumento, indica que a ilustração foi produzida pelo próprio
 /// autor: "Fonte: Elaboração própria.".
 ///
+/// Em inglês: `source`.
+///
 /// - ..corpo (content): Fonte consultada, com o ponto final.
 /// -> content
 #let fonte(..corpo) = source(..corpo)
 
 /// Gera a linha da legenda de uma ilustração: "Legenda: …" (NBR 14724:2024, seção 5.8). Deve ser chamada dentro da
 /// figura, depois da fonte.
+///
+/// Em inglês: `legend`.
 ///
 /// - corpo (content): Texto da legenda.
 /// -> content
@@ -205,6 +227,8 @@
 ///
 /// Com o parâmetro `chamada`, gera uma nota específica de uma tabela, identificada por um número em expoente no lugar
 /// da palavra "Nota". A chamada correspondente é inserida na célula da tabela com a função `chamada`.
+///
+/// Em inglês: `note`.
 ///
 /// - corpo (content): Texto da nota.
 /// - palavra (auto, content): Palavra exibida antes dos dois-pontos. O padrão é "Nota", no idioma do texto. Exemplo:
@@ -217,15 +241,37 @@
 /// Gera a chamada de uma nota específica em uma célula de tabela: um número em expoente, como em "São Paulo¹". O
 /// número é um link para a nota criada com `nota(chamada: 1)` abaixo da mesma tabela.
 ///
+/// Em inglês: `call`.
+///
 /// - n (int, str): Número da chamada.
 /// -> content
 #let chamada(n) = call(n)
+
+/// Gera uma remissão com o nome do elemento e o número dele, como em "Figura 1", com um único link sobre os dois. Uma
+/// remissão comum (`@fig`) gera apenas o número.
+///
+/// O nome vem do tipo do elemento, no idioma do texto: "Figura", "Tabela", "Quadro" e "Algoritmo" para as
+/// ilustrações; "Capítulo", "Seção", "Subseção" e "Subsubseção" para os títulos, conforme o nível; "Apêndice" e
+/// "Anexo"; "Equação". Com `forma: "pagina"`, gera a página do elemento, como em "p. 5". A remissão a uma nota de
+/// rodapé gera o número da nota. Os nomes podem ser substituídos no parâmetro `nomes` de `trabalho-academico`.
+///
+/// Um ponto e vírgula logo após a chamada encerra a expressão na marcação e não é impresso. Escreva
+/// `#remissao(<fig>)\;`.
+///
+/// Em inglês: `auto-ref`.
+///
+/// - alvo (label): Rótulo do elemento.
+/// - forma (str): Forma da remissão: `"normal"`, para o nome e o número, ou `"pagina"`, para a página.
+/// -> content
+#let remissao(alvo, forma: "normal") = auto-ref(alvo, form: translated(reference-forms, forma, "remissao: forma"))
 
 /// Gera um quadro: uma ilustração com informações textuais organizadas em linhas e colunas, com o título "Quadro 1 —
 /// Título" acima e numeração própria (NBR 14724:2024, seção 5.8). Uma tabela dentro do quadro recebe linhas fechadas
 /// de 0,4 pt em todas as células, e o texto mantém o tamanho do corpo.
 ///
 /// A função aceita os mesmos argumentos de `figure`. Para dados numéricos, use uma tabela, com `ajustada`.
+///
+/// Em inglês: `frame`.
 ///
 /// - ..args (arguments): Argumentos de `figure`: o conteúdo e `caption`, entre outros.
 /// -> content
@@ -239,6 +285,8 @@
 /// tabular do IBGE (NBR 14724:2024, seção 5.9): recebe os traços horizontais automaticamente e, se ocupar mais de uma
 /// página, repete o cabeçalho e o título com as indicações "(continua)", "(continuação)" e "(conclusão)". Uma tabela
 /// sem cabeçalho e um quadro mantêm as linhas definidas pelo autor.
+///
+/// Em inglês: `fitted`.
 ///
 /// - ..args (arguments): Argumentos de `figure`: o conteúdo, `caption`, `kind` e `supplement`, entre outros.
 /// - largura (auto, length, ratio): Largura do conjunto. Com `auto`, é a largura medida da ilustração. Informe uma
@@ -259,6 +307,8 @@
 /// seguintes com o cabeçalho e "(continua)", use `ajustada`, em que uma tabela com cabeçalho recebe essa forma
 /// por si só.
 ///
+/// Em inglês: `ibge-table`.
+///
 /// - ..args (arguments): Argumentos de `table`: `columns`, `align`, o cabeçalho em `table.header(...)` e as células,
 ///   entre outros. Um `stroke` é ignorado: os traços são os do IBGE.
 /// -> content
@@ -266,6 +316,8 @@
 
 /// Gera um parágrafo sem o recuo da primeira linha: o texto que continua depois de uma equação destacada, de uma
 /// citação longa ou de uma lista, como em "em que $x$ é…", que pertence ao parágrafo anterior.
+///
+/// Em inglês: `no-indent`.
 ///
 /// - corpo (content): Texto do parágrafo.
 /// -> content
@@ -277,6 +329,8 @@
 /// A folha de rosto e a folha de aprovação já incluem esse bloco. Use esta função apenas em páginas montadas
 /// manualmente.
 ///
+/// Em inglês: `preamble`.
+///
 /// - corpo (content): Texto da natureza do trabalho.
 /// -> content
 #let preambulo(corpo) = preamble(corpo)
@@ -286,6 +340,8 @@
 /// `fonte`. O código ocupa a largura da mancha gráfica, e um algoritmo longo continua na página seguinte.
 ///
 /// Uma `figure` cujo conteúdo é um bloco de código também é tratada como algoritmo, com a mesma numeração.
+///
+/// Em inglês: `algorithm`.
 ///
 /// - ..args (arguments): Argumentos de `figure`: o conteúdo e `caption`, entre outros.
 /// -> content
@@ -298,6 +354,8 @@
 /// Cada parte é uma `figure`, seguida do seu rótulo. A fonte de uma parte é indicada dentro da figura dela. O último
 /// argumento posicional pode ser um conteúdo com a fonte, a legenda e as notas do conjunto. Esta função não pode ser
 /// usada dentro de `ajustada`.
+///
+/// Em inglês: `subfigures`.
 ///
 /// - ..args (arguments): Partes (`figure(...)`, cada uma seguida do rótulo) e, por último, o conteúdo que fica abaixo
 ///   do conjunto (`fonte`, `legenda`, `nota`).
@@ -313,6 +371,8 @@
 /// cabeçalho nem número e exibe "Parte I" e o título, centralizados. A seção primária seguinte começa em uma página
 /// nova, e a numeração das seções continua de uma parte para a outra. As normas da ABNT não tratam desse elemento.
 ///
+/// Em inglês: `part`.
+///
 /// - titulo (content): Título da parte.
 /// -> content
 #let parte(titulo) = part(titulo)
@@ -320,6 +380,8 @@
 /// Gira o conteúdo em 90° em uma página própria, para uma figura ou uma tabela mais larga que a mancha gráfica. A
 /// página permanece em pé, com as mesmas margens, e o topo do conteúdo fica voltado para o lado da encadernação. O
 /// texto continua na página seguinte. As normas da ABNT não tratam desse elemento.
+///
+/// Em inglês: `sideways`.
 ///
 /// - corpo (content): Conteúdo a girar: uma figura ou uma tabela em `ajustada`, por exemplo.
 /// -> content
@@ -330,6 +392,8 @@
 ///
 /// O carimbo é usado no parâmetro `background` da página. Use `#set page(background: carimbo[RASCUNHO])` para
 /// aplicá-lo a todas as páginas seguintes, ou `#page(background: carimbo[RASCUNHO])[...]` para uma única página.
+///
+/// Em inglês: `stamp`.
 ///
 /// - corpo (content): Texto do carimbo.
 /// - nota (none, content): Texto menor, exibido abaixo do texto principal.
@@ -348,6 +412,8 @@
 /// A função `folha-de-aprovacao` já gera as assinaturas. Use esta função em páginas montadas manualmente. As
 /// assinaturas de uma mesma chamada ficam uma abaixo da outra; para colocá-las lado a lado, use um `grid` com uma
 /// chamada por célula.
+///
+/// Em inglês: `signature`.
 ///
 /// - ..membros (dictionary, content): Membros da banca, um por argumento. Cada membro é um dicionário com as chaves
 ///   `nome`, `titulacao` e `instituicao` (obrigatórias) e `papel` (opcional). Também aceita conteúdo, com o texto que
@@ -373,6 +439,8 @@
 /// #capa(topo: com-dados(d => [#upper(d.institution) \ #d.author]))
 /// ```
 ///
+/// Em inglês: `cover`.
+///
 /// - topo (auto, content): Conteúdo da parte superior, no lugar da instituição e do autor.
 /// - meio (auto, content): Conteúdo da parte central, no lugar do título e da versão.
 /// - pe (auto, content): Conteúdo da parte inferior, no lugar do local e do ano.
@@ -394,6 +462,8 @@
 /// #folha-de-rosto[Tese apresentada ao Programa de Pós-Graduação da Universidade do Brasil,
 ///   como requisito parcial para a obtenção do título de Doutor.]
 /// ```
+///
+/// Em inglês: `title-page`.
 ///
 /// - corpo (content): Texto da natureza do trabalho: tipo do trabalho, objetivo e instituição a que é submetido.
 /// - topo (auto, content): Conteúdo da parte superior, no lugar do autor.
@@ -420,6 +490,8 @@
 ///   (titulacao: [Profa. Dra.], nome: [Beltrana de Tal], instituicao: [Universidade do Brasil]),
 /// )
 /// ```
+///
+/// Em inglês: `approval-page`.
 ///
 /// - ..membros (dictionary, content): Membros da banca, no formato aceito por `assinatura`.
 /// - data (str, content, none): Data de aprovação, como "30 de setembro de 2026". Com `none`, é exibida uma linha em
@@ -451,6 +523,8 @@
 /// A ficha definitiva é normalmente fornecida pela biblioteca da instituição. Para usá-la, informe-a no parâmetro
 /// `ficha`: `ficha-catalografica(ficha: image("ficha.pdf", width: 13.5cm))`.
 ///
+/// Em inglês: `catalog-card`.
+///
 /// - ficha (auto, content): Ficha fornecida pela biblioteca, no lugar da ficha gerada pelo pacote.
 /// - provisoria (auto, bool): Se `true`, exibe o carimbo "FICHA PROVISÓRIA" no fundo da página. Com `auto`, o carimbo
 ///   é exibido na ficha gerada pelo pacote e omitido na ficha informada em `ficha`. O carimbo nunca é exibido com
@@ -458,8 +532,19 @@
 /// -> content
 #let ficha-catalografica(ficha: auto, provisoria: auto) = catalog-card(card: ficha, draft: provisoria)
 
+/// Gera a errata (NBR 14724:2024, seção 4.2.1.2): o título "Errata", centralizado e sem número, seguido do conteúdo.
+/// O conteúdo é escrito pelo autor: a referência do trabalho e a tabela das correções.
+///
+/// Em inglês: `errata`.
+///
+/// - corpo (content): Referência do trabalho e tabela das correções.
+/// -> content
+#let retificacao(corpo) = errata(corpo)
+
 /// Gera a página da dedicatória (NBR 14724:2024, seção 4.2.1.4). A página não tem título. O texto é composto em
 /// itálico, centralizado, no meio da página.
+///
+/// Em inglês: `dedication`.
 ///
 /// - corpo (content): Texto da dedicatória.
 /// -> content
@@ -468,12 +553,16 @@
 /// Gera os agradecimentos (NBR 14724:2024, seção 4.2.1.5): o título "Agradecimentos", centralizado e sem número,
 /// seguido do texto.
 ///
+/// Em inglês: `acknowledgments`.
+///
 /// - corpo (content): Texto dos agradecimentos.
 /// -> content
 #let agradecimentos(corpo) = acknowledgments(corpo)
 
 /// Gera a página da epígrafe (NBR 14724:2024, seção 4.2.1.6). A página não tem título. O texto é alinhado à direita,
 /// na parte inferior da página. As quebras de linha e o itálico são definidos pelo autor.
+///
+/// Em inglês: `epigraph`.
 ///
 /// - corpo (content): Texto da epígrafe, com a indicação de autoria.
 /// -> content
@@ -499,6 +588,8 @@
 /// ]
 /// ```
 ///
+/// Em inglês: `abstract`.
+///
 /// - corpo (content): Texto do resumo, com as palavras-chave.
 /// - idioma (auto, str): Idioma do resumo, como `"en"`, `"es"` ou `"fr"`. Com `auto`, é o idioma do trabalho.
 /// - titulo (auto, content): Título do resumo. Informe-o para um idioma cujo termo o pacote não tem.
@@ -511,6 +602,8 @@
 ///
 /// As palavras-chave do resumo no idioma do trabalho são usadas como assuntos na ficha catalográfica e gravadas nos
 /// metadados do PDF.
+///
+/// Em inglês: `keywords`.
 ///
 /// - ..palavras (str, content): Palavras-chave, uma por argumento.
 /// - separador (str, content): Separador entre as palavras.
@@ -530,6 +623,8 @@
 /// A norma recomenda uma lista própria para cada tipo de ilustração. As funções `lista-de-figuras`,
 /// `lista-de-tabelas` e `lista-de-quadros` geram as listas mais comuns.
 ///
+/// Em inglês: `list-of`.
+///
 /// - alvo (str, function, selector): Tipo das figuras a listar (`image`, `table`, `"quadro"`, `raw` ou o `kind` de um
 ///   tipo próprio) ou um seletor.
 /// - titulo (auto, content): Título da lista. Com `auto`, é o termo do pacote para o tipo ("Lista de ilustrações",
@@ -539,15 +634,21 @@
 
 /// Gera a lista de ilustrações com as figuras do trabalho. Equivale a `lista-de(image)`.
 ///
+/// Em inglês: `list-of-figures`.
+///
 /// -> content
 #let lista-de-figuras() = list-of-figures()
 
 /// Gera a lista de tabelas. Equivale a `lista-de(table)`.
 ///
+/// Em inglês: `list-of-tables`.
+///
 /// -> content
 #let lista-de-tabelas() = list-of-tables()
 
 /// Gera a lista de quadros. Equivale a `lista-de("quadro")`.
+///
+/// Em inglês: `list-of-frames`.
 ///
 /// -> content
 #let lista-de-quadros() = list-of-frames()
@@ -560,6 +661,8 @@
 /// texto pela chave (`@abnt`), e a primeira menção exibe a expressão por extenso, seguida da sigla entre parênteses:
 /// `(key: "abnt", short: "ABNT", long: [Associação Brasileira de Normas Técnicas])`.
 ///
+/// Em inglês: `list-of-acronyms`.
+///
 /// - ..entradas (array, dictionary): Siglas, todas como pares ou todas como dicionários.
 /// -> content
 #let lista-de-siglas(..entradas) = {
@@ -571,6 +674,8 @@
 /// ordem informada, cada um seguido do seu significado.
 ///
 /// As entradas são pares, como `($c$, [Velocidade da luz no vácuo])`, ou dicionários, como em `lista-de-siglas`.
+///
+/// Em inglês: `list-of-symbols`.
 ///
 /// - ..entradas (array, dictionary): Símbolos, todos como pares ou todos como dicionários.
 /// -> content
@@ -586,6 +691,8 @@
 ///
 /// Por padrão, uma página com o título "Apêndices" é inserida antes do primeiro apêndice.
 ///
+/// Em inglês: `appendix`.
+///
 /// - corpo (content): Restante do trabalho.
 /// - divisoria (bool): Se `true`, insere a página "Apêndices" antes do primeiro apêndice. A norma não exige essa
 ///   página. Use `#show: apendice.with(divisoria: false)` para omiti-la.
@@ -597,6 +704,8 @@
 /// numeradas com a letra dele ("A.1").
 ///
 /// Por padrão, uma página com o título "Anexos" é inserida antes do primeiro anexo.
+///
+/// Em inglês: `annex`.
 ///
 /// - corpo (content): Restante do trabalho.
 /// - divisoria (bool): Se `true`, insere a página "Anexos" antes do primeiro anexo. A norma não exige essa página.
@@ -610,6 +719,8 @@
 /// As entradas podem ser informadas de duas formas. Como pares, o glossário é apenas impresso:
 /// `("Typst", [sistema de composição tipográfica])`. Como dicionários, os termos também podem ser citados no texto
 /// pela chave (`@typst`): `(key: "typst", short: "Typst", description: [sistema de composição tipográfica])`.
+///
+/// Em inglês: `glossary`.
 ///
 /// - ..entradas (array, dictionary): Termos e definições, todos como pares ou todos como dicionários.
 /// -> content
@@ -633,6 +744,8 @@
 ///   ("Isolamento", 3),
 /// )
 /// ```
+///
+/// Em inglês: `index`.
 ///
 /// - ..entradas (dictionary, array): Entradas do índice.
 /// - colunas (int): Número de colunas.
@@ -670,6 +783,40 @@
 /// - `pages`: número de páginas, contadas a partir da folha de rosto;
 /// - `data`: dicionário original de `config-dados`.
 ///
+/// Em inglês: `with-info`.
+///
 /// - fn (function): Função que recebe os dados e retorna o conteúdo.
 /// -> content
 #let com-dados(fn) = with-info(fn)
+
+// --- the citations --------------------------------------------------------------------------------------------------
+
+/// Gera uma citação de citação (NBR 10520:2023, seção 7.3): o documento original, que não foi consultado, seguido da
+/// expressão "apud" e da chamada da fonte consultada, como em "(Cagliari, 1986, p. 104 apud Suassuna, 1995, p. 55)".
+/// Apenas a fonte consultada está no arquivo `.bib` e entra na lista de referências; o autor e a data do documento
+/// original são escritos na chamada.
+///
+/// ```typ
+/// #citacao-de-citacao([Cagliari], 1986, <suassuna1995>, pagina: [p. 104], complemento: [p. 55])
+/// #citacao-de-citacao([Freire], 1994, <streck2017>, forma: "frase")
+/// ```
+///
+/// Nos sistemas numéricos de chamada, a fonte consultada é indicada pelo número, como em "(Cagliari, 1986 apud 5)".
+///
+/// Em inglês: `apud`.
+///
+/// - autor (str, content): Autor do documento original, como é escrito na chamada: o sobrenome ou a primeira palavra
+///   do título.
+/// - data (int, str, content): Data do documento original.
+/// - chave (label): Chave da fonte consultada no arquivo `.bib`.
+/// - pagina (none, str, content): Página do documento original, como em `[p. 104]`.
+/// - complemento (none, content): Página da fonte consultada, como em `[p. 55]`.
+/// - forma (str): Forma da chamada: `"normal"`, para a chamada inteira entre parênteses, ou `"frase"`, para o autor na
+///   frase, como em "Freire (1994 apud Streck, 2017)".
+/// -> content
+#let citacao-de-citacao(autor, data, chave, pagina: none, complemento: none, forma: "normal") = {
+  assert(type(chave) == label, message: "citacao-de-citacao: a fonte consultada é uma chave do .bib, como "
+    + "<silva2020>; recebido: " + repr(chave))
+  apud(autor, data, chave, page: pagina, supplement: complemento, form: translated(citation-forms, forma,
+    "citacao-de-citacao: forma"))
+}
