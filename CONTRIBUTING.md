@@ -126,42 +126,69 @@ Os PDFs dos manuais e dos exemplos completos, as imagens dos exemplos do manual,
 
 ## Nova versão
 
+Toda a publicação passa pelo gotpm: o `gotpm bump` muda a versão, e o `gotpm publish` leva o pacote ao Typst Universe.
 Os READMEs apontam para o que está no repositório (manuais, exemplos e seus PDFs, modelo, licença, o README no outro
 idioma, imagens) pelo endereço da tag da versão (`v0.1.1`); só as âncoras são relativas, porque o `README.md` é
-mostrado no Typst Universe sem o repositório em volta. Ao mudar a versão no `typst.toml`:
+mostrado no Typst Universe sem o repositório em volta. Para uma versão nova:
 
-1. troque a versão nas importações (`@preview/abntly:<versão>`) do modelo, dos exemplos, do manual e dos READMEs, e
-   nos links dos READMEs;
-2. rode `gotpm install -e` (o `@local` da versão nova), `sh scripts/manual.sh`, `sh scripts/readme.sh` e
+1. `gotpm bump patch` (ou `minor`, `major`, ou a versão, como `gotpm bump 0.2.0`) muda a versão do `typst.toml`, e
+   só ela;
+2. troque a versão nas importações (`@preview/abntly:<versão>`) do modelo, dos exemplos, do manual e dos READMEs, e
+   nos links dos READMEs; `git grep -n "abntly:<versão anterior>\|v<versão anterior>"` mostra os lugares;
+3. rode `gotpm install -e` (o `@local` da versão nova), `sh scripts/manual.sh`, `sh scripts/readme.sh` e
    `sh scripts/thumbnail.sh`;
-3. faça o commit e crie e envie a tag: `git tag v<versão> && git push origin main v<versão>`. A tag faz os links e
+4. faça o commit e crie e envie a tag: `git tag v<versão> && git push origin main v<versão>`. A tag faz os links e
    as imagens dos READMEs funcionarem e dispara o [`release.yml`](.github/workflows/release.yml), que roda os
-   testes, monta o pacote com `scripts/package.sh` (ele recusa uma tag diferente da versão), cria um trabalho do
-   pacote montado e o compila, roda o verificador do typst/packages, publica a GitHub Release (zip e manuais) e
-   envia o branch `abntly-<versão>` ao fork do typst/packages;
-4. abra o pull request `abntly:<versão>` em typst/packages pelo link do resumo do workflow, com o checklist do
-   modelo preenchido. Depois da integração, a versão aparece no [Typst Universe](https://typst.app/universe/) em
+   testes, publica pelo `gotpm publish` (abaixo) e cria a GitHub Release, com o zip do pacote, os manuais e os
+   exemplos;
+5. abra o pull request `abntly:<versão>` em typst/packages pelo link do resumo do workflow, com o checklist do
+   modelo preenchido (o `gotpm publish` sugere outro título, `release: abntly <versão>`; o typst/packages pede
+   `abntly:<versão>`). Depois da integração, a versão aparece no [Typst Universe](https://typst.app/universe/) em
    minutos. Versões publicadas são imutáveis: uma correção é uma versão nova.
 
 Enquanto o pull request não é integrado, a versão pode ser refeita: apague a release e a tag
 (`gh release delete v<versão> --cleanup-tag` e `git tag -d v<versão>`), corrija, faça o commit e crie a tag de novo. O
-workflow força o push do branch e o pull request se atualiza sozinho.
+`gotpm publish` acrescenta um commit ao branch que já está no fork, e o pull request se atualiza sozinho; sem
+nenhuma mudança no pacote, ele falha, porque não há o que publicar.
 
 ## Publicação
 
-O `release.yml` chega ao typst/packages por um fork e um token, configurados uma vez:
+O `gotpm publish` faz, nesta ordem:
+
+1. roda o portão do `typst.toml` (`[tool.gotpm] pre-publish-hook`), `sh scripts/package.sh --check`, e para se ele
+   falhar. O portão monta os arquivos publicados em `dist/` e confere:
+   - a tag (`RELEASE_TAG`, na CI) contra a versão do `typst.toml`;
+   - as importações do pacote e os links dos READMEs na versão certa;
+   - um trabalho criado pelo `typst init` só com os arquivos publicados, que precisa compilar;
+   - a versão ainda fora do Typst Universe;
+   - o verificador dos pull requests do typst/packages (`ghcr.io/typst/package-check`), pelo Docker. Sem Docker, o
+     verificador é pulado com um aviso; na CI, ele é obrigatório;
+2. clona o fork do typst/packages (o `fork.url` da configuração do gotpm) e cria o branch `abntly-<versão>` a
+   partir da `main` do fork;
+3. copia o pacote para `packages/preview/abntly/<versão>/`, com as mesmas regras da instalação: ficam de fora o
+   `exclude` do `typst.toml` e o que o `.gitignore` ignora (os arquivos do `scripts/package.sh`);
+4. faz o commit e o push do branch para o fork. O pull request fica para o autor.
+
+O fork e o token são configurados uma vez:
 
 1. um fork de [typst/packages](https://github.com/typst/packages). Se o fork não se chamar `<dono>/packages`, defina
    a variável de repositório `REGISTRY_FORK` (Settings > Secrets and variables > Actions > Variables) como `dono/nome`;
 2. um token pessoal *fine-grained* restrito ao fork, com **Contents: read and write**, salvo como o segredo de
-   repositório `REGISTRY_TOKEN`. Se o push for recusado por falta do escopo `workflow`, sincronize a `main` do fork
-   com o typst/packages: o branch nasce da `main` atual deles, que pode trazer workflows que o fork ainda não tem.
+   repositório `REGISTRY_TOKEN`. O `release.yml` o entrega ao git do `gotpm publish`.
 
-O `gotpm publish` também leva o pacote a um fork do typst/packages (o commit e o push de um branch; o pull request
-fica para o autor), mas não substitui o `release.yml`: ele não confere se a versão já está no Typst Universe, não roda
-o verificador do typst/packages nem testa o `typst init`, copia da cópia de trabalho e não da tag, e usa o mesmo
-nome de branch do workflow (`abntly-<versão>`). O lançamento continua pelo `release.yml`.
+Para publicar desta máquina, sem a CI, configure o fork uma vez e rode o gotpm na raiz da cópia de trabalho limpa,
+na tag da versão:
+
+```sh
+gotpm config set fork.url https://github.com/<dono>/packages
+gotpm publish --local -m "abntly:<versão>"   # ensaio: o commit no clone do fork, sem push
+gotpm publish -m "abntly:<versão>"           # o push, com as credenciais do git desta máquina
+```
+
+O clone do fork fica na pasta de dados do gotpm (`gotpm locate` mostra as pastas). O `gotpm publish` copia a cópia
+de trabalho, e não a tag: publique de uma árvore limpa, na tag. A GitHub Release, nesse caso, sai à mão:
+`sh scripts/package.sh dist` e `gh release create v<versão> --verify-tag --generate-notes` com o zip e os PDFs.
 
 Para ensaiar o workflow nesta máquina, com o Docker aberto: `act push -W .github/workflows/release.yml -e
-.github/act/release.json`. Os passos externos (verificador, release, push) são pulados; `sh scripts/package.sh` dá os
-mesmos arquivos em `dist/`.
+.github/act/release.json`. Sob o act, o `gotpm publish` roda com `--local`, e a release e o verificador do
+typst/packages são pulados.

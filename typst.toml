@@ -27,3 +27,7 @@ tests = "tests"
 ppi = 96.0
 max-delta = 1
 max-deviations = 0
+
+# Publishing (gotpm, CONTRIBUTING.md): `gotpm publish` runs this gate first and stops when it fails.
+[tool.gotpm]
+pre-publish-hook = ["sh scripts/package.sh --check"]

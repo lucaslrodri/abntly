@@ -1,17 +1,17 @@
 name: Release
 
-# Pushing the tag `v<version>` (the version of typst.toml) runs the tests, packages the files that go to Typst
-# Universe, creates the GitHub release and pushes the branch `<name>-<version>` to a fork of typst/packages. The pull
-# request to Typst Universe is opened from the link in the job summary: its template is a checklist that the author
-# has to confirm. Setup (fork, token) and local runs with act: see CONTRIBUTING.md.
+# Pushing the tag `v<version>` (the version of typst.toml) runs the tests, publishes the package with gotpm to a fork
+# of typst/packages (`gotpm publish`, which first runs the gate of typst.toml, `sh scripts/package.sh --check`, and then
+# pushes the branch `<name>-<version>`) and creates the GitHub release. The pull request to Typst Universe is opened
+# from the link in the job summary: its template is a checklist that the author has to confirm. Setup (fork, token)
+# and local runs: see CONTRIBUTING.md.
 on:
   push:
     tags: ["v*"]
 
 env:
-  # The repository that hosts Typst Universe and the path of the packages inside it.
+  # The repository that hosts Typst Universe.
   REGISTRY_REPO: typst/packages
-  REGISTRY_PATH: packages/preview
   # Your fork of it; the secret REGISTRY_TOKEN must be able to push there. Override with the repository variable
   # REGISTRY_FORK when the fork is not called `<owner>/packages`.
   REGISTRY_FORK: ${{ vars.REGISTRY_FORK || format('{0}/packages', github.repository_owner) }}
@@ -48,8 +48,8 @@ jobs:
         with:
           typst-version: 0.15.1
 
-      # Fails when the tag and typst.toml disagree, or when a published file imports another version or @local. The
-      # manuals are the committed PDFs: the tests job has just checked that they match their sources.
+      # The files of the GitHub release (the gate of gotpm checks them again). The manuals are the committed PDFs:
+      # the tests job has just checked that they match their sources.
       - name: Package
         id: package
         env:
@@ -69,21 +69,44 @@ jobs:
             echo "version=$version"
           } >> "$GITHUB_OUTPUT"
 
-      # What an author does: create a work from the published files only, and compile it untouched.
-      - name: Try the packaged template
+      - name: Install gotpm
         run: |
-          typst init --package-path dist "@preview/${{ steps.package.outputs.name }}:${{ steps.package.outputs.version }}" /tmp/work
-          typst compile --package-path dist --font-path fonts --ignore-system-fonts /tmp/work/main.typ
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL https://github.com/npikall/gotpm/releases/download/v0.8.0/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      # The linter that reviews the pull requests of typst/packages. It works offline, from the package cache that the
-      # step above filled. Skipped under act, where the container cannot share these folders with Docker.
-      - name: Typst package check
-        if: ${{ !env.ACT }}
+      # gotpm runs the gate of typst.toml (`sh scripts/package.sh --check`: the tag against the version, the imports and
+      # the links, a work created from the published files and compiled, the version not yet on Typst Universe, the
+      # checker of typst/packages), clones the fork, commits the package to `<name>-<version>` and pushes it. Its push
+      # goes through git, with the token given by a credential helper; under act it stops before the push.
+      - name: Publish to the fork of typst/packages (gotpm)
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          NAME: ${{ steps.package.outputs.name }}
+          VERSION: ${{ steps.package.outputs.version }}
         run: |
-          docker run --rm \
-            -v "$PWD/${{ steps.package.outputs.dir }}:/data" \
-            -v "${XDG_CACHE_HOME:-$HOME/.cache}/typst/packages:/.cache/typst/packages:ro" \
-            ghcr.io/typst/package-check check
+          # authored by whoever made the tagged commit
+          git config --global user.name "$(git log -1 --pretty=format:%an)"
+          git config --global user.email "$(git log -1 --pretty=format:%ae)"
+          gotpm config set fork.url "https://github.com/$REGISTRY_FORK"
+          if [ -n "${ACT:-}" ]; then
+            gotpm publish --local -m "$NAME:$VERSION"
+            exit 0
+          fi
+          if [ -z "$REGISTRY_TOKEN" ]; then
+            echo "::error::the secret REGISTRY_TOKEN is not set (see CONTRIBUTING.md)"
+            exit 1
+          fi
+          git config --global credential.https://github.com.helper \
+            '!f() { echo username=x-access-token; echo "password=$REGISTRY_TOKEN"; }; f'
+          gotpm publish -m "$NAME:$VERSION"
+
+          url="https://github.com/$REGISTRY_REPO/compare/main...${REGISTRY_FORK%%/*}:${REGISTRY_FORK##*/}:$NAME-$VERSION?expand=1&title=$NAME:$VERSION"
+          {
+            echo "### $NAME:$VERSION is ready for Typst Universe"
+            echo "Open the pull request and fill in its checklist: <$url>"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       # Not under act (see tests.yml); there, `sh scripts/package.sh` gives the same files in dist/.
       - name: Upload the package
@@ -101,50 +124,3 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" dist/*.zip dist/*.pdf --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
-
-      - name: Commit the package to a clone of the registry
-        env:
-          NAME: ${{ steps.package.outputs.name }}
-          VERSION: ${{ steps.package.outputs.version }}
-          PACKAGE_DIR: ${{ steps.package.outputs.dir }}
-        run: |
-          git clone --depth 1 --filter=blob:none --sparse "https://github.com/$REGISTRY_REPO.git" /tmp/registry
-          git -C /tmp/registry sparse-checkout set "$REGISTRY_PATH/$NAME"
-          if [ -e "/tmp/registry/$REGISTRY_PATH/$NAME/$VERSION" ]; then
-            echo "::error::$NAME:$VERSION is already published; versions on Typst Universe are immutable"
-            exit 1
-          fi
-          mkdir -p "/tmp/registry/$REGISTRY_PATH/$NAME"
-          cp -R "$PACKAGE_DIR" "/tmp/registry/$REGISTRY_PATH/$NAME/$VERSION"
-
-          cd /tmp/registry
-          # authored by whoever made the tagged commit
-          author=$(git -C "$GITHUB_WORKSPACE" log -1 --pretty=format:%an 2> /dev/null || true)
-          email=$(git -C "$GITHUB_WORKSPACE" log -1 --pretty=format:%ae 2> /dev/null || true)
-          git config user.name "${author:-github-actions[bot]}"
-          git config user.email "${email:-41898282+github-actions[bot]@users.noreply.github.com}"
-          git checkout -b "$NAME-$VERSION"
-          git add "$REGISTRY_PATH/$NAME/$VERSION"
-          git commit --quiet -m "$NAME:$VERSION"
-          git show --stat --format='%an <%ae>%n%s' HEAD
-
-      - name: Push the branch to the fork
-        if: ${{ !env.ACT }}
-        env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-          NAME: ${{ steps.package.outputs.name }}
-          VERSION: ${{ steps.package.outputs.version }}
-        run: |
-          if [ -z "$REGISTRY_TOKEN" ]; then
-            echo "::error::the secret REGISTRY_TOKEN is not set (see CONTRIBUTING.md)"
-            exit 1
-          fi
-          cd /tmp/registry
-          # If this is refused for lack of the `workflow` scope, sync the main branch of the fork with typst/packages.
-          git push --force "https://x-access-token:${REGISTRY_TOKEN}@github.com/${REGISTRY_FORK}.git" "$NAME-$VERSION"
-
-          url="https://github.com/$REGISTRY_REPO/compare/main...${REGISTRY_FORK%%/*}:${REGISTRY_FORK##*/}:$NAME-$VERSION?expand=1&title=$NAME:$VERSION"
-          {
-            echo "### $NAME:$VERSION is ready for Typst Universe"
-            echo "Open the pull request and fill in its checklist: <$url>"
-          } >> "$GITHUB_STEP_SUMMARY"
