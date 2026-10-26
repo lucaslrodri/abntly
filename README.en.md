@@ -202,6 +202,9 @@ Fixed:
   - "[S. l., s. d.]" came out without the space after the comma;
   - the "[S. l.]" of a book with a publisher came after two spaces;
   - a line could break between "S." and "l.".
+- In the lists of acronyms and of symbols and in the glossary written with dictionaries, an entry cited in the text by
+  its key (`@abnt`) leads to its own line of the list. Before, they all led to one place, just below the title of the
+  list.
 
 ### 0.1.0 (3 October 2026)
 

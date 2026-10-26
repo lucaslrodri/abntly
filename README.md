@@ -206,6 +206,8 @@ Corrigido:
   - "[S. l., s. d.]" saía sem o espaço depois da vírgula;
   - o "[S. l.]" de um livro com editora vinha depois de dois espaços;
   - a linha podia quebrar entre "S." e "l.".
+- Nas listas de siglas e de símbolos e no glossário escritos com dicionários, a entrada citada no texto pela chave
+  (`@abnt`) leva à linha dela na lista. Antes, todas levavam ao mesmo ponto, logo abaixo do título da lista.
 
 ### 0.1.0 (3 de outubro de 2026)
 

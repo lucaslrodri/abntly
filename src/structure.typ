@@ -646,6 +646,14 @@
   if entries.len() > 0 { register-glossary(entries) }
 }
 
+// The labels that glossarium gives one entry with a key (`<abnt>`, `<abnt:short>`...), invisible and taking no room,
+// at the line of the entry: a citation in the text (`@abnt`) is a link to them, so it leads to that line. A pair has
+// none. Glossarium sets its labels where its glossary is, so one invisible glossary for the whole list would send
+// every citation to one place.
+#let anchor(entry) = if entry != none {
+  place(print-glossary((entry,), invisible: true, show-all: true, disable-back-references: true))
+}
+
 // The list of the acronyms or of the symbols: a title of the pre-textual part and an entry each, as a decision of the
 // package: the label in a box of 5 quads, 2 quads from the margin, the description 8 quads from it, in lines under
 // its first; the items a line and a fixed skip apart. The entries are pairs, `("ABNT", [Associação Brasileira de
@@ -657,19 +665,19 @@
   assert(entries.all(e => (type(e) == dictionary) == keyed and (keyed or (type(e) == array and e.len() == 2))),
     message: key + ": the entries are all pairs, (\"ABNT\", [Associação...]), or all dictionaries, (key: \"abnt\", "
       + "short: \"ABNT\", long: [...]); got " + repr(entries))
-  let pairs = if keyed { entries.map(e => (e.short, e.long)) } else { entries }
-  if sort { pairs = pairs.sorted(key: p => folded(p.first())) }
+  // each line with its entry (`none` for a pair), which the order of the list keeps together
+  let rows = if keyed { entries.map(e => (e.short, e.long, e)) } else { entries.map(p => (..p, none)) }
+  if sort { rows = rows.sorted(key: r => folded(r.first())) }
   pre-heading(key)
-  if keyed {
-    [#metadata(entries) #keyed-entries]
-    print-glossary(entries, invisible: true, show-all: true, disable-back-references: true)
-  }
+  if keyed { [#metadata(entries) #keyed-entries] }
   set par(first-line-indent: 0pt, justify: true)
   // `quad`, the unit of the widths, is 11.7487 pt in a 12 pt body; the items a line and 9.63 pt (of that body) apart
   let quad = 11.7487em / 12
-  for (label, description) in pairs {
-    block(above: line-spacing - 1em + pt12(9.63), below: line-spacing - 1em + pt12(9.63),
-      grid(columns: (8 * quad, 1fr), pad(left: 2 * quad, box(width: 5 * quad, label)), description))
+  for (label, description, entry) in rows {
+    block(above: line-spacing - 1em + pt12(9.63), below: line-spacing - 1em + pt12(9.63), {
+      anchor(entry)
+      grid(columns: (8 * quad, 1fr), pad(left: 2 * quad, box(width: 5 * quad, label)), description)
+    })
   }
 }
 
@@ -851,20 +859,20 @@
   assert(given.all(e => (type(e) == dictionary) == keyed and (keyed or (type(e) == array and e.len() == 2))),
     message: "glossary: the entries are all pairs, (\"Typst\", [...]), or all dictionaries, (key: \"typst\", short: "
       + "\"Typst\", description: [...]); got " + repr(given))
-  let pairs = if keyed { given.map(e => (e.short, e.at("description", default: e.at("long", default: [])))) } else {
-    given
-  }
-  pairs = pairs.sorted(key: p => folded(p.first()))
+  // each term with its entry (`none` for a pair), which the alphabetical order keeps together
+  let rows = if keyed {
+    given.map(e => (e.short, e.at("description", default: e.at("long", default: [])), e))
+  } else { given.map(p => (..p, none)) }
+  rows = rows.sorted(key: r => folded(r.first()))
   context heading(level: 1, numbering: none, word-raw("glossary"))
-  if keyed {
-    [#metadata(given) #keyed-entries]
-    print-glossary(given, invisible: true, show-all: true, disable-back-references: true)
-  }
+  if keyed { [#metadata(given) #keyed-entries] }
   let quad = 11.7487em / 12
   set par(first-line-indent: 0pt, hanging-indent: 2.5 * quad, justify: true)
-  for (term, definition) in pairs {
-    block(above: line-spacing - 1em + pt12(14.78), below: line-spacing - 1em + pt12(14.78),
-      par[*#term*#h(0.5 * quad)#definition.])
+  for (term, definition, entry) in rows {
+    block(above: line-spacing - 1em + pt12(14.78), below: line-spacing - 1em + pt12(14.78), {
+      anchor(entry)
+      par[*#term*#h(0.5 * quad)#definition.]
+    })
   }
 }
 
