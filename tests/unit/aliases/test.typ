@@ -20,6 +20,8 @@
 // --- the main function and the data -----------------------------------------------------------------------------------
 #assert.eq(indigo-escuro, dark-indigo)
 #same(config-nomes(chapter: "Unidade"), config-names(chapter: "Unidade"))
+#same(config-hiperlinks(glossary: black, address: none), config-hyperlinks(glossary: black, address: none))
+#same(config-hiperlinks(outros: none, glossary: black), config-hyperlinks(others: none, glossary: black))
 #same(
   config-dados(titulo: [T], subtitulo: [S], autor: "Nome do Autor", orientador: (nome: "Ana", genero: "f"),
     coorientador: "Beto", instituicao: [U], programa: [P], area: [A], ano: 2026, local: [L], versao: [V], volume: 2,

@@ -40,9 +40,12 @@
 // a page as a link to the page with that printed number (the count starts on the title page: the physical page is
 // the printed one plus `offset`), each bound of a range ("5-7") to its own page, up to the last page of the work;
 // what is not a number (content, a number past the last page) as it is. The links follow `hyperlink` of the main
-// function, as every link of the work: `none` takes them out, a colour paints them.
+// function, as every link of the work, as the kind `index` (src/layout.typ): `none` takes them out, a colour paints
+// them.
 #let page-link(p, offset: 0, last: 0) = {
-  let one(n) = if n < 1 or n > last { str(n) } else { link((page: n + offset, x: 0pt, y: 0pt), str(n)) }
+  let one(n) = if n < 1 or n > last { str(n) } else {
+    [#link((page: n + offset, x: 0pt, y: 0pt), str(n))<abntly-link-index>]
+  }
   if type(p) == int { return one(p) }
   if type(p) != str { return [#p] }
   let range = p.match(regex("^(\\d+)-(\\d+)$"))

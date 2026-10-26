@@ -591,13 +591,14 @@
     let fig = it.element
     let number = numbering(fig.numbering, ..fig.counter.at(fig.location()))
     let prefix = [#fig.supplement#sym.space] + box(width: 2.3 * quad, number + h(1fr) + [—] + h(1fr))
-    link(fig.location(), block(inset: (right: 2.55 * quad), it.indented(prefix, {
+    // a link of the kind `outline` (src/layout.typ)
+    [#link(fig.location(), block(inset: (right: 2.55 * quad), it.indented(prefix, {
       it.body()
       h(0.4em)
       box(width: 1fr, it.fill)
       // the page in the 2.55 quads the title leaves, out of the line (a box wider than the empty one it is in)
       box(width: 0pt, box(width: 2.55 * quad, align(right, it.page())))
-    }, gap: 0pt)))
+    }, gap: 0pt)))<abntly-link-outline>]
   }
   outline(title: none, target: selector)
 }
@@ -967,16 +968,16 @@
     // the page in the style of the entry (its sizes are relative: set again inside it, they would grow)
     let page = it.page()
     // (the link inside the paragraph: around the block, a link is set in a line of the size of the summary, which
-    // moves a larger entry down)
+    // moves a larger entry down; a link of the kind `outline`, src/layout.typ)
     block(above: above - elements.at(style).size, below: 0pt, {
       set text(..elements.at(style))
       set par(first-line-indent: 0pt, justify: false, leading: line-spacing - 1em, hanging-indent: column)
-      block(inset: (right: 2.55 * quad), link(head.location(), {
+      block(inset: (right: 2.55 * quad), [#link(head.location(), {
         box(width: column, if number != none { number })
         title
         if dots != none { h(0.4em); box(width: 1fr, dots) } else { h(1fr) }
         box(width: 0pt, box(width: 2.55 * quad, align(right, page)))
-      }))
+      })<abntly-link-outline>])
     })
   }
   body

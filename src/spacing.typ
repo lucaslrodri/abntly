@@ -144,12 +144,13 @@
   set footnote.entry(indent: 0pt, clearance: 1em, gap: (single-spacing - 1em) * scale.footnote,
     separator: line(length: 5cm, stroke: 0.4pt))
   // the lines of a note under its first letter, the number standing out (14724, 5.2.1): the number in a box of 1.2 em
-  // of the body, the entry rebuilt as one paragraph hanging by that box, the only rule that rebuilds an element
+  // of the body, the entry rebuilt as one paragraph hanging by that box, the only rule that rebuilds an element; the
+  // number a link back to the call, of the kind `note` (src/layout.typ)
   show footnote.entry: it => {
     let mark = 1.2em / scale.footnote
     let number = numbering(it.note.numbering, ..counter(footnote).at(it.note.location()))
     par(leading: single-spacing - 1em, first-line-indent: 0pt, hanging-indent: mark,
-      box(width: mark, link(it.note.location(), super(number))) + it.note.body)
+      box(width: mark, [#link(it.note.location(), super(number))<abntly-link-note>]) + it.note.body)
   }
   body
 }

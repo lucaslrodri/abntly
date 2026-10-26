@@ -188,6 +188,7 @@ abntly was inspired by these projects:
 - Fixed the italics of "[S. l.]", "[s. n.]" and "[s. d.]" in the references.
 - Fixed the link of an acronym, symbol or term cited by its key, which now leads to its own line of the list.
 - Fixed the convergence of a long work with acronyms, symbols or terms cited by their keys.
+- `config-hyperlinks` (`config-hiperlinks`): the colour of each kind of link, or no link, and that of the others.
 
 ### 0.1.0 (3 October 2026)
 

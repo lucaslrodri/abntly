@@ -14,7 +14,8 @@
 //   the package. It gives the chapter on one side ("Capítulo 1. Introdução"), on both sides the chapter on the verso
 //   and the section on the recto, in italics, over a rule of 0.4 pt; only the number on the page that opens a
 //   primary section.
-// - The links in one colour, `dark-indigo` (a dark indigo), or none at all.
+// - The links in one colour, `dark-indigo` (a dark indigo), or none at all; or a colour, or none, for each kind of
+//   link (`config-hyperlinks`).
 // - The language: Portuguese or English, the words of src/lang.toml (src/words.typ).
 //
 // The `context`s: the running header of each page, with two queries (the primary sections and, on the recto of a
@@ -33,6 +34,49 @@
 ///
 /// In Portuguese: `indigo-escuro`.
 #let dark-indigo = oklch(39.8%, 0.195, 277.366deg)
+
+// The kinds of link, each with a colour of its own, or no link (`none`): the addresses, in the text and in the
+// references; the cross-references, and a `link` the author writes to a label or a place; the calls of the
+// citations; the entries of the summary and of the lists; the calls of the notes and the way back from a footnote;
+// the pages of the index; the acronyms, the symbols and the terms cited by key (`@abnt`). The links the package
+// makes itself carry their kind in a label, `<abntly-link-note>`, read by the rule of `link`.
+#let link-kinds = ("address", "reference", "citation", "outline", "note", "index", "glossary")
+
+/// Defines the colour of each kind of link, for the `hyperlink` parameter of `abntly`. Example:
+/// `config-hyperlinks(glossary: black, others: none)`: the acronyms in black, still links, and no other link.
+///
+/// The keys are the kinds of link: `address` (addresses, in the text and in the references), `reference`
+/// (cross-references, and a `link` to a label), `citation` (the calls of the citations), `outline` (the summary and
+/// the lists of illustrations), `note` (the calls of the notes), `index` (the pages of the index) and `glossary`
+/// (acronyms, symbols and terms cited by key, as `@abnt`). Each takes a colour, or `none` to remove the links of
+/// that kind. The kinds left out take the colour of `others`.
+///
+/// In Portuguese: `config-hiperlinks`.
+///
+/// - others (color, none): Colour, or `none`, of the kinds of link left out.
+/// - ..args (arguments): Colour, or `none`, of each kind of link, by key.
+/// -> dictionary
+#let config-hyperlinks(others: dark-indigo, ..args) = {
+  assert(args.pos().len() == 0,
+    message: "config-hyperlinks: takes only the colours of the kinds of link, by key; got " + repr(args.pos()))
+  let given = args.named()
+  for key in given.keys() {
+    assert(key in link-kinds, message: "config-hyperlinks: unknown kind of link " + repr(key) + "; the kinds are "
+      + link-kinds.join(", "))
+  }
+  for (key, value) in given + (others: others) {
+    assert(value == none or type(value) == color,
+      message: "config-hyperlinks: " + key + " must be a colour or none; got " + repr(value))
+  }
+  given + (others: others)
+}
+
+// The colour of every kind, from the `hyperlink` of the main function: one colour, or `none`, for all of them, or
+// the dictionary of `config-hyperlinks`, its kinds left out in the colour of its `others` (`dark-indigo`, in a
+// dictionary written without it)
+#let link-colours(hyperlink) = link-kinds.map(kind => (kind, if type(hyperlink) == dictionary {
+  hyperlink.at(kind, default: hyperlink.at("others", default: dark-indigo))
+} else { hyperlink })).to-dict()
 
 /// Starts the pre-textual part: the headings after it take no number. It must be used with a `show` rule:
 /// `#show: front-matter`.
@@ -170,9 +214,11 @@
 /// - lang (str): "pt" or "en".
 /// - names (dictionary): the words the author replaces, from `config-names`.
 /// - two-sided (bool): the work on both sides of the leaf.
-/// - hyperlink (color, none): the colour of the links, or `none` for no link at all.
+/// - hyperlink (color, none, dictionary): the colour of the links, or `none` for no link at all; or, from
+///   `config-hyperlinks`, the colour (or `none`) of each kind of link.
 /// -> content
 #let layout(body, lang: "pt", names: (:), two-sided: false, hyperlink: dark-indigo) = {
+  let colours = link-colours(hyperlink)
   set page(paper: "a4", margin: if two-sided { (top: 3cm, bottom: 2cm, inside: 3cm, outside: 2cm) } else {
     (top: 3cm, bottom: 2cm, left: 3cm, right: 2cm)
   }, header: running-header(two-sided), header-ascent: 0pt, numbering: "1", footer: none)
@@ -193,18 +239,34 @@
   }
   // the page of a part on the recto, on both sides
   show <abntly-part-start>: it => if two-sided { odd-break(); it } else { it }
-  // the links: the colour on every kind of them, or no link at all. The addresses, the footnote that goes back to its
-  // call and the calls of the notes of a table are `link`s; the outline, the references and the call of a footnote
-  // are linked by Typst inside, so without links they are written again: the entry of the outline as Typst sets it,
-  // less its link; the reference as the supplement and the number of what it names, or its page (the equations by
-  // chapter write theirs with `link`); the call of the footnote as its number, which keeps the note. The citations
-  // take the colour, and without links stay as Typst sets them
-  show link: it => if hyperlink == none { it.body } else { text(fill: hyperlink, it) }
-  show outline.entry: it => if hyperlink == none { it.indented(it.prefix(), it.inner()) } else {
-    text(fill: hyperlink, it)
+  // the links: the colour of each kind of them, or no link at all (`link-kinds`). The addresses, the footnote that
+  // goes back to its call, the calls of the notes of a table, the entries of the summary and of the lists, the pages
+  // of the index and the terms of glossarium are `link`s; the outline, the references and the call of a footnote are
+  // linked by Typst inside, so without links they are written again: the entry of the outline as Typst sets it, less
+  // its link; the reference as the supplement and the number of what it names, or its page (the equations by chapter
+  // write theirs with `link`); the call of the footnote as its number, which keeps the note. The citations take the
+  // colour, and without links stay as Typst sets them. A `link` has its kind in the label the package gives it, or
+  // in its destination: an address, a term of glossarium (a figure of its kind), or else a reference
+  show link: it => {
+    let paint(kind) = if colours.at(kind) == none { it.body } else { text(fill: colours.at(kind), it) }
+    let tag = if it.has("label") { str(it.label) } else { "" }
+    if tag.starts-with("abntly-link-") { return paint(tag.slice("abntly-link-".len())) }
+    if type(it.dest) == str { return paint("address") }
+    if type(it.dest) != label { return paint("reference") }
+    context {
+      let target = query(it.dest)
+      let term = target.len() > 0 and target.first().func() == figure and target.first().kind == "glossarium_entry"
+      paint(if term { "glossary" } else { "reference" })
+    }
   }
-  show ref: it => if hyperlink != none { text(fill: hyperlink, it) } else {
+  show outline.entry: it => if colours.outline == none { it.indented(it.prefix(), it.inner()) } else {
+    text(fill: colours.outline, it)
+  }
+  show ref: it => {
     let target = it.element
+    // a term of glossarium (`@abnt`): its colour is that of the link glossarium makes, by the rule of `link`
+    if target != none and target.func() == figure and target.kind == "glossarium_entry" { return it }
+    if colours.reference != none { return text(fill: colours.reference, it) }
     if target == none { return it }
     // the name the reference gives: `auto-ref`'s is a function of the element
     let supplement = if it.supplement == auto { target.supplement } else if type(it.supplement) == function {
@@ -231,8 +293,8 @@
     } else { numbering(target.numbering, ..steps.at(at)) }
     if supplement in (none, []) { number } else [#supplement~#number]
   }
-  show cite: it => if hyperlink == none { it } else { text(fill: hyperlink, it) }
-  show footnote: it => if hyperlink != none { text(fill: hyperlink, it) } else {
+  show cite: it => if colours.citation == none { it } else { text(fill: colours.citation, it) }
+  show footnote: it => if colours.note != none { text(fill: colours.note, it) } else {
     h(0pt, weak: true) + context super(numbering(it.numbering, ..counter(footnote).get()))
   }
   words.names.update(names)

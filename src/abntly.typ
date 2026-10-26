@@ -4,7 +4,7 @@
 // author changes with `#set text(size: 11pt)` after `#show: abntly`, as the page with `#set page(...)`. The data of
 // the work (info.typ, `config-info`) go into a state at its start, for the pages that print them, and into the
 // metadata of the PDF.
-#import "layout.typ": dark-indigo, layout
+#import "layout.typ": dark-indigo, layout, config-hyperlinks
 #import "fonts.typ": fonts
 #import "spacing.typ": spacing
 #import "elements.typ": elements
@@ -39,8 +39,9 @@
 /// - two-sided (bool): If `true`, formats the work for printing on both sides of the sheet: mirrored margins, page
 ///   number on the outer side and primary sections starting on an odd page. In this mode, the draft stamps of the
 ///   catalog card and of the approval sheet are not shown.
-/// - hyperlink (color, none): Colour of the links (addresses, cross-references, citations, summary and note marks).
-///   Use `black` for printing or `none` to remove the links.
+/// - hyperlink (color, none, dictionary): Colour of the links (addresses, cross-references, citations, summary and
+///   note marks). Use `black` for printing or `none` to remove the links. For a colour for each kind of link, use
+///   `config-hyperlinks`, as in `hyperlink: config-hyperlinks(glossary: black)`.
 /// - table-font-size (length): Size of the text of the tables, in `em` of the body. The default, `10em / 12`, is 10
 ///   pt in a body of 12 pt. Use `1em` to keep the size of the body. A quadro always uses the size of the body.
 /// - equation-numbering (str, function): Format of the numbering of the equations. `"(1.1)"` numbers by chapter and
@@ -72,9 +73,12 @@
   )
   assert(type(two-sided) == bool, message: "abntly: two-sided must be true or false; got " + repr(two-sided))
   assert(
-    hyperlink == none or type(hyperlink) == color,
-    message: "abntly: hyperlink must be a colour, like dark-indigo or black, or none; got " + repr(hyperlink),
+    hyperlink == none or type(hyperlink) in (color, dictionary),
+    message: "abntly: hyperlink must be a colour, like dark-indigo or black, none, or config-hyperlinks(...); got "
+      + repr(hyperlink),
   )
+  // a dictionary is checked as `config-hyperlinks` checks it
+  if type(hyperlink) == dictionary { let _ = config-hyperlinks(..hyperlink) }
   assert(
     type(table-font-size) == length and table-font-size.abs == 0pt and table-font-size.em > 0,
     message: "abntly: table-font-size must be a length in em of the body, like 1em or 10em / 12; got "

@@ -167,6 +167,8 @@ example, `#set text(size: 11pt)` changes the font size, and the other sizes scal
 
 #reference("config-names", description: true)
 
+#reference("config-hyperlinks", description: true)
+
 == Conventions of the manual <how-to-read>
 
 Each element is presented in up to four blocks. The first one summarises what the standard requires:
@@ -721,7 +723,9 @@ outer side. The following example shows an even page (verso) and an odd page (re
 #remark[
   By default, the links (cross-references, citations, table of contents and addresses) are shown in the colour
   `dark-indigo`, which makes reading on screen easier. In the printed version, in which all the text must be black,
-  use `hyperlink: black` in the main function.
+  use `hyperlink: black` in the main function. Each kind of link can also have its own colour, or no link, with
+  `config-hyperlinks`: `hyperlink: config-hyperlinks(glossary: black)` sets the acronyms in black, still links, and
+  `others` gives the colour of the kinds left out.
 ]
 
 == Font <font>

@@ -165,6 +165,8 @@ exemplo, `#set text(size: 11pt)` altera o tamanho da fonte, e os demais tamanhos
 
 #reference("config-nomes", description: true)
 
+#reference("config-hiperlinks", description: true)
+
 == Convenções do manual <how-to-read>
 
 Cada elemento é apresentado em até quatro blocos. O primeiro resume o que a norma exige:
@@ -709,7 +711,9 @@ lado externo. O exemplo a seguir mostra uma página par (verso) e uma página í
 #remark[
   Por padrão, os links (remissões, citações, sumário e endereços) são exibidos na cor `indigo-escuro`, o que
   facilita a leitura na tela. Na versão impressa, em que todo o texto deve ser preto, use `hiperlink: black` na
-  função principal.
+  função principal. Cada tipo de link também pode ter a sua cor, ou nenhum link, com `config-hiperlinks`:
+  `hiperlink: config-hiperlinks(glossary: black)` deixa as siglas em preto, ainda com link, e `outros` dá a cor
+  dos tipos não informados.
 ]
 
 == Fonte <font>

@@ -315,7 +315,7 @@
 
 // IBGE, 4.9 and 4.12: the number as an exponent, one of the three forms of the norm (4.9.1: "entre parênteses, entre
 // colchetes, exponencial"), glued to the element it marks as the call of a footnote; the link goes to the first note
-// with that call after it (a `context` for each call, which looks for it).
+// with that call after it (a `context` for each call, which looks for it), a link of the kind `note` (src/layout.typ).
 /// Creates the call of a specific note in a cell of a table: a superscript number, as in "São Paulo¹". The number is
 /// a link to the note created with `note(call: 1)` under the same table.
 ///
@@ -325,7 +325,7 @@
 /// -> content
 #let call(n) = h(0pt, weak: true) + context {
   let target = query(selector(<abntly-call>).after(here())).find(m => m.value == n)
-  if target == none { super[#n] } else { link(target.location(), super[#n]) }
+  if target == none { super[#n] } else { [#link(target.location(), super[#n])<abntly-link-note>] }
 }
 
 // --- a reference with its name ------------------------------------------------------------------------------------

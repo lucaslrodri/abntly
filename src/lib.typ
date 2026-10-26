@@ -4,7 +4,8 @@
 //
 // - src/abntly.typ: the main function, `abntly`, which applies the rules of the modules below, one after the other.
 // - src/layout.typ: the page, the running header, the links and the parts of the work (`front-matter`,
-//   `main-matter`, `back-matter`); the default colour of the links (`dark-indigo`).
+//   `main-matter`, `back-matter`); the default colour of the links (`dark-indigo`), and a colour for each kind of
+//   link (`config-hyperlinks`).
 // - src/fonts.typ: the typography (New Computer Modern).
 // - src/spacing.typ: the spacing (the 1.5 of NBR 14724 between the lines, the distances and indents around each
 //   element); the paragraph without the indent of its first line (`no-indent`).
@@ -35,7 +36,7 @@
 #import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, ibge-table, preamble, algorithm,
   subfigures, part, sideways, stamp, signature)
 #import "spacing.typ": no-indent
-#import "layout.typ": front-matter, main-matter, back-matter, dark-indigo
+#import "layout.typ": front-matter, main-matter, back-matter, dark-indigo, config-hyperlinks
 #import "words.typ": config-names
 #import "info.typ": config-info
 #import "structure.typ": (cover, title-page, approval-page, catalog-card, errata, dedication, acknowledgments,
@@ -44,8 +45,8 @@
 #import "index.typ": index
 #import "citations.typ": apud
 // the Portuguese names, each a function with its parameters and its help in Portuguese (src/aliases.typ)
-#import "aliases.typ": (trabalho-academico, indigo-escuro, config-nomes, config-dados, pretextual, textual,
-  postextual, fonte, legenda, nota, chamada, remissao, quadro, ajustada, tabela-ibge, sem-recuo, preambulo,
+#import "aliases.typ": (trabalho-academico, indigo-escuro, config-nomes, config-hiperlinks, config-dados, pretextual,
+  textual, postextual, fonte, legenda, nota, chamada, remissao, quadro, ajustada, tabela-ibge, sem-recuo, preambulo,
   algoritmo, subfiguras, parte, deitada, carimbo, assinatura, capa, folha-de-rosto, folha-de-aprovacao,
   ficha-catalografica, retificacao, dedicatoria, agradecimentos, epigrafe, resumo, palavras-chave, lista-de,
   lista-de-figuras, lista-de-tabelas, lista-de-quadros, lista-de-siglas, lista-de-simbolos, apendice, anexo,

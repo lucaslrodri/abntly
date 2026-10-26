@@ -11,7 +11,7 @@
 #import "elements.typ": (source, legend, note, call, auto-ref, frame, fitted, ibge-table, preamble, algorithm,
   subfigures, part, sideways, stamp, signature)
 #import "spacing.typ": no-indent
-#import "layout.typ": front-matter, main-matter, back-matter, dark-indigo
+#import "layout.typ": front-matter, main-matter, back-matter, dark-indigo, config-hyperlinks
 #import "words.typ": config-names
 #import "info.typ": config-info
 #import "structure.typ": (cover, title-page, approval-page, catalog-card, errata, dedication, acknowledgments,
@@ -67,8 +67,9 @@
 /// - frente-e-verso (bool): Se `true`, formata o trabalho para impressão em frente e verso: margens espelhadas,
 ///   número da página no lado externo e seções primárias iniciando em página ímpar. Nesse modo, os carimbos de versão
 ///   provisória da ficha catalográfica e da folha de aprovação não são exibidos.
-/// - hiperlink (color, none): Cor dos links (endereços, remissões, citações, sumário e chamadas de notas). Use
-///   `black` para impressão ou `none` para remover os links.
+/// - hiperlink (color, none, dictionary): Cor dos links (endereços, remissões, citações, sumário e chamadas de
+///   notas). Use `black` para impressão ou `none` para remover os links. Para uma cor de cada tipo de link, use
+///   `config-hiperlinks`, como em `hiperlink: config-hiperlinks(glossary: black)`.
 /// - tamanho-da-fonte-da-tabela (length): Tamanho do texto das tabelas, em `em` do corpo. O padrão, `10em / 12`,
 ///   corresponde a 10 pt em um corpo de 12 pt. Use `1em` para manter o tamanho do corpo. Quadros usam sempre o tamanho
 ///   do corpo.
@@ -120,6 +121,22 @@
 /// - ..palavras (arguments): Termos a substituir, identificados pela chave. Aceitam texto ou conteúdo.
 /// -> dictionary
 #let config-nomes(..palavras) = config-names(..palavras)
+
+/// Define a cor de cada tipo de link, para o parâmetro `hiperlink` de `trabalho-academico`. Exemplo:
+/// `config-hiperlinks(glossary: black, outros: none)`: as siglas em preto, ainda com link, e nenhum outro link.
+///
+/// As chaves são os tipos de link, em inglês: `address` (endereços, no texto e nas referências), `reference`
+/// (remissões, e um `link` para um rótulo), `citation` (as chamadas das citações), `outline` (o sumário e as listas
+/// de ilustrações), `note` (as chamadas das notas), `index` (as páginas do índice) e `glossary` (siglas, símbolos e
+/// termos citados pela chave, como `@abnt`). Cada uma recebe uma cor, ou `none` para tirar os links desse tipo. Os
+/// tipos não informados ficam com a cor de `outros`.
+///
+/// Em inglês: `config-hyperlinks`.
+///
+/// - outros (color, none): Cor, ou `none`, dos tipos de link não informados.
+/// - ..ligacoes (arguments): Cor, ou `none`, de cada tipo de link, identificado pela chave.
+/// -> dictionary
+#let config-hiperlinks(outros: dark-indigo, ..ligacoes) = config-hyperlinks(others: outros, ..ligacoes)
 
 /// Define os dados do trabalho, para o parâmetro `dados` de `trabalho-academico`. Esses dados são usados na capa, na
 /// folha de rosto, na folha de aprovação e na ficha catalográfica. Campos não informados são omitidos dessas páginas;

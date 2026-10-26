@@ -1,14 +1,15 @@
 /// Synopsis: A função principal (src/abntly.typ) e o que o pacote exporta (src/lib.typ): os argumentos e as recusas
 #import "../common.typ": *
 #import "../../../src/lib.typ" as package
-#import "../../../src/lib.typ": abntly, config-info, config-names, dark-indigo
+#import "../../../src/lib.typ": abntly, config-info, config-names, config-hyperlinks, dark-indigo
+#import "../../../src/layout.typ": link-kinds, link-colours
 #import "../../../src/spacing.typ": in-size, heading-block, heading-before, heading-after, line-spacing, scale
 #import "../../../src/fonts.typ": elements, sizes, correction, script-size, families
 
 // --- what the package exports -----------------------------------------------------------------------------------------
-// 45 names in English and 45 in Portuguese; every name is a function, but the colour of the links
+// 46 names in English and 46 in Portuguese; every name is a function, but the colour of the links
 #let exported = dictionary(package)
-#assert.eq(exported.len(), 45 + 45)
+#assert.eq(exported.len(), 46 + 46)
 #for (name, value) in exported {
   if name in ("dark-indigo", "indigo-escuro") { assert.eq(type(value), color, message: name) } else {
     assert.eq(type(value), function, message: name)
@@ -21,6 +22,24 @@
 #fails(() => abntly(lang: "es")[corpo], "abntly: lang must be \"pt\" or \"en\"")
 #fails(() => abntly(two-sided: "sim")[corpo], "abntly: two-sided must be true or false")
 #fails(() => abntly(hyperlink: "blue")[corpo], "abntly: hyperlink must be a colour")
+#fails(() => abntly(hyperlink: (glossary: "preto"))[corpo], "config-hyperlinks: glossary must be a colour or none")
+
+// --- the colour of each kind of link ----------------------------------------------------------------------------------
+// `config-hyperlinks` takes only the kinds, each a colour or `none`, and `others`, the colour of the kinds left out
+// (dark-indigo, unless given); one colour, or `none`, is the same for every kind
+#assert.eq(config-hyperlinks(glossary: black, address: none), (glossary: black, address: none, others: dark-indigo))
+#fails(() => config-hyperlinks(black), "config-hyperlinks: takes only the colours of the kinds of link, by key")
+#fails(() => config-hyperlinks(acronym: black), "config-hyperlinks: unknown kind of link \"acronym\"; the kinds are")
+#fails(() => config-hyperlinks(glossary: "black"), "config-hyperlinks: glossary must be a colour or none")
+#fails(() => config-hyperlinks(others: "none"), "config-hyperlinks: others must be a colour or none")
+#assert.eq(link-colours(black), link-kinds.map(kind => (kind, black)).to-dict())
+#assert.eq(link-colours(none).values().dedup(), (none,))
+#let mixed = link-colours(config-hyperlinks(glossary: black, address: none))
+#assert.eq((mixed.glossary, mixed.address, mixed.reference, mixed.index), (black, none, dark-indigo, dark-indigo))
+#let others = link-colours(config-hyperlinks(glossary: black, others: none))
+#assert.eq((others.glossary, others.address, others.outline), (black, none, none))
+// a dictionary written by hand, without `others`: the kinds left out in dark-indigo
+#assert.eq(link-colours((glossary: black)).reference, dark-indigo)
 #fails(() => abntly(table-font-size: 10pt)[corpo], "abntly: table-font-size must be a length in em of the body")
 #fails(() => abntly(table-font-size: 1em + 2pt)[corpo], "abntly: table-font-size must be a length in em of the body")
 #fails(() => abntly(table-font-size: 0em)[corpo], "abntly: table-font-size must be a length in em of the body")
