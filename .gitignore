@@ -5,6 +5,10 @@ desktop.ini
 tinymist-lsp.log
 tinymist.lock
 
+# The PDFs of the full examples that Tinymist writes: compiled once with `tinymist compile --save-lock`, they are
+# in tinymist.lock, from which the editor takes main.typ as the main file of a chapter it opens
+/examples/*/main.pdf
+
 # VS Code
 .vscode/
 

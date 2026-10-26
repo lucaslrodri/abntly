@@ -5,7 +5,7 @@
 // Para compilar a partir da raiz do repositório:
 //   sh scripts/link.sh
 //   typst compile --font-path fonts examples/pt/main.typ
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 #show: trabalho-academico.with(
   dados: config-dados(
@@ -33,7 +33,7 @@
 
 #ficha-catalografica()
 
-#errata[
+#retificacao[
   AUTOR, Nome do. *Composição de trabalhos acadêmicos em Typst*: um exemplo completo nas normas da ABNT. 2026.
   Tese (Doutorado em Ciência da Informação) -- Universidade do Brasil, Rio Branco, 2026.
 

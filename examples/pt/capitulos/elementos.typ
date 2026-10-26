@@ -1,4 +1,4 @@
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 // um gráfico de barras simples, desenhado com as formas do Typst, para as figuras do exemplo
 #let barras(..valores) = box(height: 3cm, stack(dir: ltr, spacing: 6mm, ..valores.pos().map(v => align(bottom,
@@ -64,7 +64,7 @@ com mais de uma linha tem as linhas seguintes alinhadas sob a primeira letra do 
 
 == Ilustrações
 
-Toda ilustração tem o título acima dela e a fonte abaixo. A #auto-ref(<fig-defesas>) mostra uma figura com fonte,
+Toda ilustração tem o título acima dela e a fonte abaixo. A #remissao(<fig-defesas>) mostra uma figura com fonte,
 legenda e nota.
 
 #figure(caption: [Trabalhos defendidos por ano])[
@@ -75,7 +75,7 @@ legenda e nota.
 ] <fig-defesas>
 
 Com a função `ajustada`, o título e a fonte ficam limitados à largura da ilustração, como na
-#auto-ref(<fig-ajustada>).
+#remissao(<fig-ajustada>).
 
 #ajustada(rotulo: <fig-ajustada>, caption: [Trabalhos defendidos por ano, com o título limitado à largura da
   ilustração])[
@@ -83,7 +83,7 @@ Com a função `ajustada`, o título e a fonte ficam limitados à largura da ilu
   #fonte()
 ]
 
-O quadro apresenta informações textuais, como o #auto-ref(<qua-tipos>).
+O quadro apresenta informações textuais, como o #remissao(<qua-tipos>).
 
 #quadro(caption: [Tipos de trabalho acadêmico])[
   #table(columns: 2,
@@ -95,7 +95,7 @@ O quadro apresenta informações textuais, como o #auto-ref(<qua-tipos>).
 ] <qua-tipos>
 
 As subfiguras reúnem várias partes em uma figura: a Figura @sub-a e a Figura @sub-b são partes da
-#auto-ref(<fig-partes>).
+#remissao(<fig-partes>).
 
 #subfiguras(
   figure(barras(12, 18, 15), caption: [Primeiro triênio]), <sub-a>,
@@ -108,7 +108,7 @@ As subfiguras reúnem várias partes em uma figura: a Figura @sub-a e a Figura @
 
 == Tabelas
 
-As tabelas seguem as normas de apresentação tabular do @ibge. A #auto-ref(<tab-defesas>) tem uma nota geral e uma
+As tabelas seguem as normas de apresentação tabular do @ibge. A #remissao(<tab-defesas>) tem uma nota geral e uma
 nota específica.
 
 #ajustada(rotulo: <tab-defesas>, caption: [Trabalhos defendidos, por tipo -- Universidade do Brasil -- 2024-2025])[
@@ -123,7 +123,7 @@ nota específica.
 ]
 
 Uma tabela em uma `figure` comum recebe os mesmos traços com `tabela-ibge`; o título e a fonte ficam na largura da
-mancha gráfica, e a figura pode flutuar, como a #auto-ref(<tab-bolsas>).
+mancha gráfica, e a figura pode flutuar, como a #remissao(<tab-bolsas>).
 
 #figure(placement: auto, caption: [Bolsas concedidas, por nível -- Universidade do Brasil -- 2025])[
   #tabela-ibge(columns: (5cm, 2.5cm), align: (left, right),
@@ -149,7 +149,7 @@ $ s = sqrt(sigma^2) $
 
 == Algoritmos
 
-Um algoritmo é uma ilustração de código, com título e fonte, como o #auto-ref(<alg-media>).
+Um algoritmo é uma ilustração de código, com título e fonte, como o #remissao(<alg-media>).
 
 #algoritmo(caption: [Média de uma lista de números])[
   ```python
@@ -166,6 +166,6 @@ Um algoritmo é uma ilustração de código, com título e fonte, como o #auto-r
 
 As remissões podem ser escritas de três formas. A remissão simples produz apenas o número, como em "figura
 @fig-defesas". A remissão com a palavra produz o nome e o número, como em "@tab-defesas[Tabela]". A função
-`auto-ref` encontra o nome do elemento: #auto-ref(<fig-defesas>), #auto-ref(<qua-tipos>),
-#auto-ref(<tab-defesas>), #auto-ref(<cap-elementos>) e #auto-ref(<eq-media>). Ela também indica a página do
-elemento: a #auto-ref(<fig-defesas>) está na #auto-ref(<fig-defesas>, form: "page").
+`remissao` encontra o nome do elemento: #remissao(<fig-defesas>), #remissao(<qua-tipos>),
+#remissao(<tab-defesas>), #remissao(<cap-elementos>) e #remissao(<eq-media>). Ela também indica a página do
+elemento: a #remissao(<fig-defesas>) está na #remissao(<fig-defesas>, forma: "pagina").

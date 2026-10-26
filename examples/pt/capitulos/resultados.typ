@@ -1,4 +1,4 @@
-#import "@preview/abntly:0.1.0": *
+#import "@preview/abntly:0.1.1": *
 
 = Resultados <cap-resultados>
 
@@ -7,7 +7,7 @@ preenchimento.
 
 == Tabela em mais de uma página
 
-A #auto-ref(<tab-longa>) não cabe em uma página. O título e o cabeçalho são repetidos na página seguinte, com as
+A #remissao(<tab-longa>) não cabe em uma página. O título e o cabeçalho são repetidos na página seguinte, com as
 indicações "(continua)" e "(conclusão)".
 
 #ajustada(rotulo: <tab-longa>, caption: [Documentos analisados, por município -- 2025])[
