@@ -13,6 +13,7 @@ geração. Para usar o pacote, veja o [README](README.md) e o [manual](docs/manu
 | ---------- | -------- |
 | [Typst](https://typst.app/) ≥ 0.15.0 | compilar o pacote, o manual e os exemplos |
 | [Tytanic](https://typst-community.github.io/tytanic/) 0.4.1 (`tt`) | os casos de teste |
+| [gotpm](https://github.com/npikall/gotpm) 0.8.0 (opcional) | instalar o pacote na pasta de pacotes do Typst |
 
 Os scripts são `sh` e rodam no macOS e no Linux. No Windows, só o `scripts/fonts.ps1` e o `scripts/install.ps1` têm
 versão própria; os demais precisam do WSL ou do Git Bash.
@@ -29,6 +30,29 @@ sh scripts/fonts.sh    # baixa a New Computer Modern para fonts/ e a instala (Wi
 O modelo, os exemplos e os READMEs importam o pacote pelo nome, `@preview/abntly:0.1.1`, como um autor faz. O
 `scripts/link.sh` liga o repositório à pasta de pacotes locais do Typst, de modo que esse nome leve à cópia de
 trabalho no `typst compile`, no `tt` e no editor. Os demais testes importam `src/lib.typ` pelo caminho.
+
+### Instalação local com o gotpm
+
+O [gotpm](https://github.com/npikall/gotpm) instala o pacote na pasta de pacotes do Typst a partir desta cópia, com os
+mesmos comandos no macOS, no Linux e no Windows (`brew install npikall/tap/gotpm`, ou o instalador do README dele):
+
+```sh
+gotpm install -e                                  # @local/abntly:<versão>, um link para esta cópia (editável)
+gotpm install                                     # @local/abntly:<versão>, uma cópia só com os arquivos do pacote
+gotpm install -e -n preview                       # @preview/abntly:<versão>, o mesmo que o scripts/link.sh
+gotpm install -r github.com/lucaslrodri/abntly    # a maior tag v<versão> do GitHub, sem esta cópia (-t HEAD: a main)
+```
+
+A cópia leva o que vai para o Typst Universe: o `exclude` do `typst.toml` e o `.gitignore` ficam de fora, como no
+`scripts/package.sh`. O `-f` substitui uma instalação da mesma versão (de um link, só o link é apagado), `gotpm list`
+mostra o que está instalado e `gotpm uninstall abntly -V <versão>` remove. O `scripts/link.sh --check`, que os
+scripts e os testes usam, aceita o link do `gotpm install -e -n preview`. Duas diferenças em relação aos scripts:
+
+- o gotpm não reescreve a importação do modelo (`@preview/abntly:<versão>`), como os scripts `install` fazem. Um
+  `typst init @local/abntly:<versão>` cria um trabalho que só compila com a versão no Typst Universe ou com
+  `gotpm install -n preview`;
+- no Windows, o `-e` (um link simbólico) pede o Modo de Desenvolvedor ou um terminal de administrador; sem isso,
+  use `gotpm install`, que copia.
 
 Como alternativa, para ter a versão local sem a cópia de trabalho, os scripts `install` baixam a tag de versão mais
 recente do GitHub (a maior `v<versão>`) e instalam os arquivos que ela publica no Typst Universe na pasta de pacotes
@@ -138,6 +162,11 @@ O `release.yml` chega ao typst/packages por um fork e um token, configurados uma
 2. um token pessoal *fine-grained* restrito ao fork, com **Contents: read and write**, salvo como o segredo de
    repositório `REGISTRY_TOKEN`. Se o push for recusado por falta do escopo `workflow`, sincronize a `main` do fork
    com o typst/packages: o branch nasce da `main` atual deles, que pode trazer workflows que o fork ainda não tem.
+
+O `gotpm publish` também leva o pacote a um fork do typst/packages (o commit e o push de um branch; o pull request
+fica para o autor), mas não substitui o `release.yml`: ele não confere se a versão já está no Typst Universe, não roda
+o verificador do typst/packages nem testa o `typst init`, copia da cópia de trabalho e não da tag, e usa o mesmo
+nome de branch do workflow (`abntly-<versão>`). O lançamento continua pelo `release.yml`.
 
 Para ensaiar o workflow nesta máquina, com o Docker aberto: `act push -W .github/workflows/release.yml -e
 .github/act/release.json`. Os passos externos (verificador, release, push) são pulados; `sh scripts/package.sh` dá os
