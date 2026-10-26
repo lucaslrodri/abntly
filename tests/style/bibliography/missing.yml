@@ -1,0 +1,73 @@
+# Works without place, publisher or date, one for each way NBR 6023 writes what the work does not give: "[S. l.]",
+# "[s. n.]", "[s. d.]" and their combinations, each abbreviation in italics and the brackets, the colon and the comma
+# upright. In the fields of hayagriva (a .bib has no post of a blog); the authors in alphabetical order, so that the
+# list keeps the order of the file. The case unit/citations checks the same works.
+
+sem-local-editora:
+  type: book
+  title: Livro sem local nem editora
+  author: Almeida, Ana
+  date: 2020
+
+sem-local:
+  type: book
+  title: Livro sem local
+  author: Barros, Bruno
+  publisher: Editora Exemplo
+  date: 2020
+
+sem-editora:
+  type: book
+  title: Livro sem editora
+  author: Costa, Carla
+  publisher:
+    location: Rio Branco
+  date: 2020
+
+sem-data:
+  type: book
+  title: Livro sem data
+  author: Dias, Daniel
+  publisher:
+    name: Editora Exemplo
+    location: Rio Branco
+
+artigo-sem-local:
+  type: article
+  title: Artigo sem local
+  author: Esteves, Elisa
+  date: 2020
+  page-range: 10-20
+  parent:
+    type: periodical
+    title: Revista Exemplo
+    volume: 2
+    issue: 3
+
+postagem-sem-local:
+  type: article
+  title: Postagem sem local
+  author: Farias, Fábio
+  date: 2020-03-05
+  parent:
+    type: blog
+    title: Blog Exemplo
+
+postagem-sem-local-data:
+  type: article
+  title: Postagem sem local nem data
+  author: Gomes, Gabriela
+  parent:
+    type: blog
+    title: Blog Exemplo
+
+documento-sem-local-editora-data:
+  type: misc
+  title: Documento sem local, editora nem data
+  author: Horta, Hugo
+
+manuscrito-sem-local:
+  type: manuscript
+  title: Manuscrito sem local
+  author: Isidoro, Irene
+  date: 1890

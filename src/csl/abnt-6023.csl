@@ -63,7 +63,7 @@
       <term name="script-writer">roteirista</term>
       <term name="in">in</term>
       <term name="accessed">acesso em</term>
-      <term name="no-place" form="short">s. l.</term>
+      <term name="no-place" form="short">s.&#160;l.</term>
       <term name="page-range-delimiter">-</term>
     </terms>
   </locale>
@@ -90,7 +90,7 @@
         <single>comp</single>
         <multiple>comp</multiple>
       </term>
-      <term name="no-place" form="short">s. l.</term>
+      <term name="no-place" form="short">s.&#160;l.</term>
       <term name="page-range-delimiter">-</term>
     </terms>
   </locale>
@@ -286,7 +286,7 @@
             <text variable="publisher-place" suffix=": "/>
           </if>
           <else>
-            <text value="s. l." font-style="italic" prefix="[" suffix="]"/>
+            <group prefix="[" suffix="]"><text value="s.&#160;l." font-style="italic"/></group>
           </else>
         </choose>
       </if>
@@ -299,7 +299,7 @@
               </if>
               <else-if type="entry-encyclopedia"/>
               <else>
-                <text value="S. l." font-style="italic" prefix=" [" suffix="]: "/>
+                <group prefix="[" suffix="]: "><text value="S.&#160;l." font-style="italic"/></group>
               </else>
             </choose>
             <choose>
@@ -307,15 +307,12 @@
                 <text variable="publisher"/>
               </if>
               <else>
-                <text value="s. n." font-style="italic" prefix="[" suffix="]"/>
+                <group prefix="[" suffix="]"><text value="s.&#160;n." font-style="italic"/></group>
               </else>
             </choose>
           </if>
           <else>
-            <group>
-              <text value="S. l." font-style="italic" prefix="[" suffix=": "/>
-              <text value="s. n." font-style="italic" suffix="]"/>
-            </group>
+            <group prefix="[" suffix="]" delimiter=": "><text value="S.&#160;l." font-style="italic"/><text value="s.&#160;n." font-style="italic"/></group>
           </else>
         </choose>
       </else>
@@ -369,7 +366,7 @@
         </choose>
       </if>
       <else>
-        <text value="s. d." font-style="italic" prefix="[" suffix="]"/>
+        <group prefix="[" suffix="]"><text value="s.&#160;d." font-style="italic"/></group>
       </else>
     </choose>
   </macro>
@@ -381,7 +378,7 @@
         </date>
       </if>
       <else>
-        <text value="[s. d.]"/>
+        <group prefix="[" suffix="]"><text value="s.&#160;d." font-style="italic"/></group>
       </else>
     </choose>
   </macro>
@@ -454,7 +451,7 @@
         <text variable="publisher-place"/>
       </if>
       <else>
-        <text term="no-place" form="short" font-style="italic" prefix="[" suffix="]"/>
+        <group prefix="[" suffix="]"><text term="no-place" form="short" font-style="italic"/></group>
       </else>
     </choose>
   </macro>
@@ -500,15 +497,14 @@
                   <text variable="publisher-place"/>
                 </if>
                 <else>
-                  <text value="S. l." font-style="italic" prefix="[" suffix="]"/>
+                  <group prefix="[" suffix="]"><text value="S.&#160;l." font-style="italic"/></group>
                 </else>
               </choose>
               <text macro="issued"/>
             </group>
           </if>
           <else>
-            <text value="S. l." font-style="italic" prefix="[" suffix=","/>
-            <text value="s. d." font-style="italic" suffix="]"/>
+            <group prefix="[" suffix="]" delimiter=", "><text value="S.&#160;l." font-style="italic"/><text value="s.&#160;d." font-style="italic"/></group>
           </else>
         </choose>
       </if>
@@ -521,11 +517,7 @@
             </group>
           </if>
           <else>
-            <group>
-              <text value="S. l." prefix="[" suffix=": "/>
-              <text value="s. n." suffix=", "/>
-              <text value="s. d." suffix="]"/>
-            </group>
+            <group prefix="[" suffix="]" delimiter=", "><group delimiter=": "><text value="S.&#160;l." font-style="italic"/><text value="s.&#160;n." font-style="italic"/></group><text value="s.&#160;d." font-style="italic"/></group>
           </else>
         </choose>
       </else>
@@ -776,7 +768,7 @@
                   <text variable="publisher-place"/>
                 </if>
                 <else>
-                  <text value="S. l." prefix="[" suffix="]"/>
+                  <group prefix="[" suffix="]"><text value="S.&#160;l." font-style="italic"/></group>
                 </else>
               </choose>
               <text macro="issued"/>
@@ -841,8 +833,8 @@
               <else-if type="song" variable="collection-title" match="all">
                 <text macro="author"/>
                 <text variable="title" text-case="capitalize-first"/>
-                <group>
-                  <text term="in" text-case="capitalize-first" font-style="italic" suffix=": "/>
+                <group delimiter=": ">
+                  <text term="in" text-case="capitalize-first" font-style="italic"/>
                   <text variable="collection-title" text-case="capitalize-first" font-weight="bold"/>
                 </group>
                 <text value=""/>
