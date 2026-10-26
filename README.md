@@ -188,30 +188,13 @@ O abntly se inspirou nestes projetos:
 
 ### 0.1.1
 
-Adicionado:
-
-- Os nomes em português que faltavam: `remissao` (`auto-ref`), com `forma: "pagina"`; `retificacao` (`errata`); e
-  `citacao-de-citacao` (`apud`), com `pagina`, `complemento` e `forma: "frase"`. Toda função pública tem agora um nome
-  em cada língua.
-- A descrição de cada função termina com o nome dela na outra língua, e o manual o mostra ao lado do nome.
-
-Corrigido:
-
-- As expressões da obra sem local, editora ou data, nas referências e nas chamadas: "[S. l.]", "[s. n.]", "[s. d.]" e
-  as combinações, como "[S. l.: s. n.]". Cada abreviatura sai em itálico, com um espaço não separável entre as letras,
-  e os colchetes, os dois-pontos e a vírgula saem em redondo. Antes:
-  - os colchetes saíam em itálico;
-  - em "[S. l.: s. n.]", "s. n." saía em redondo;
-  - "[S. l.: s. n., s. d.]", o "[S. l.]" de um manuscrito e o "[s. d.]" da chamada autor-data saíam sem itálico;
-  - "[S. l., s. d.]" saía sem o espaço depois da vírgula;
-  - o "[S. l.]" de um livro com editora vinha depois de dois espaços;
-  - a linha podia quebrar entre "S." e "l.".
-- Nas listas de siglas e de símbolos e no glossário escritos com dicionários, a entrada citada no texto pela chave
-  (`@abnt`) leva à linha dela na lista. Antes, todas levavam ao mesmo ponto, logo abaixo do título da lista.
+- Nomes em português para `auto-ref`, `errata` e `apud`: `remissao`, `retificacao` e `citacao-de-citacao`.
+- Corrigido o itálico de "[S. l.]", "[s. n.]" e "[s. d.]" nas referências.
+- Corrigido o link da sigla, do símbolo ou do termo citado pela chave, que agora leva à linha dele na lista.
 
 ### 0.1.0 (3 de outubro de 2026)
 
-Primeira versão: o pacote, o modelo, os exemplos, os manuais em português e em inglês e a suíte de testes.
+- Primeira versão.
 
 ## Licença
 

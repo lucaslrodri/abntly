@@ -184,31 +184,13 @@ abntly was inspired by these projects:
 
 ### 0.1.1
 
-Added:
-
-- The Portuguese names that were missing: `remissao` (`auto-ref`), with `forma: "pagina"`; `retificacao` (`errata`);
-  and `citacao-de-citacao` (`apud`), with `pagina`, `complemento` and `forma: "frase"`. Every public function now has a
-  name in each language.
-- The description of each function ends with its name in the other language, and the manual shows it beside the name.
-
-Fixed:
-
-- The expressions of a work without place, publisher or date, in the references and in the calls: "[S. l.]",
-  "[s. n.]", "[s. d.]" and their combinations, as "[S. l.: s. n.]". Each abbreviation is set in italics, with a
-  non-breaking space between its letters, and the brackets, the colon and the comma are upright. Before:
-  - the brackets came out in italics;
-  - in "[S. l.: s. n.]", "s. n." came out upright;
-  - "[S. l.: s. n., s. d.]", the "[S. l.]" of a manuscript and the "[s. d.]" of an author-date call had no italics;
-  - "[S. l., s. d.]" came out without the space after the comma;
-  - the "[S. l.]" of a book with a publisher came after two spaces;
-  - a line could break between "S." and "l.".
-- In the lists of acronyms and of symbols and in the glossary written with dictionaries, an entry cited in the text by
-  its key (`@abnt`) leads to its own line of the list. Before, they all led to one place, just below the title of the
-  list.
+- Portuguese names for `auto-ref`, `errata` and `apud`: `remissao`, `retificacao` and `citacao-de-citacao`.
+- Fixed the italics of "[S. l.]", "[s. n.]" and "[s. d.]" in the references.
+- Fixed the link of an acronym, symbol or term cited by its key, which now leads to its own line of the list.
 
 ### 0.1.0 (3 October 2026)
 
-First release: the package, the template, the examples, the manuals in Portuguese and in English and the test suite.
+- First release.
 
 ## License
 
